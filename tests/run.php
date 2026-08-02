@@ -388,6 +388,44 @@ check('mobile Kopfzeile hat alle vier Bestandteile', (function (string $style): 
     return true;
 })($style));
 
+// Von den beiden Bildfassungen darf immer nur eine sichtbar sein. Der Fehler
+// lag nicht in der Logik, sondern im Gewicht: `.screen-frame img` mit seinem
+// display schlug ein knappes `.screen-dark`. Sichtbar wurde das nur im
+// Systemmodus bei hellem System – also genau dort, wo man selten hinschaut.
+$ohneKommentare = preg_replace('#/\*.*?\*/#s', '', $style);
+
+$gewicht = static function (string $sel): int {
+    preg_match_all('/\.[\w-]+|\[[^\]]+\]|:(?!:)[\w-]+/', $sel, $klassen);
+    preg_match_all('/(?:^|\s|>)([a-z]+)(?![\w-]*[\(\[])/', $sel, $elemente);
+    return count($klassen[0]) * 100 + count($elemente[0]);
+};
+
+$bildRegel = $gewicht('.screen-frame img');
+$grundHell = $gewicht('.screen-frame .screen-light');
+$grundDunkel = $gewicht('.screen-frame .screen-dark');
+
+check('Bildumschaltung wiegt schwerer als die allgemeine Bildregel',
+    $grundHell > $bildRegel && $grundDunkel > $bildRegel,
+    "img={$bildRegel} hell={$grundHell} dunkel={$grundDunkel}");
+
+check('allgemeine Bildregel setzt kein display',
+    (bool) preg_match('/\.screen-frame img \{[^}]*\}/', $ohneKommentare, $t)
+    && !str_contains($t[0], 'display'),
+    'sonst überstimmt sie die Umschaltung');
+
+check('beide Bildfassungen werden für jeden Modus geregelt', (function (string $css): bool {
+    foreach (["[data-theme='dark']", "[data-theme='light']", ":not([data-theme='light'])"] as $modus) {
+        foreach (['screen-light', 'screen-dark'] as $fassung) {
+            // Gegen wechselnde Ausrichtung unempfindlich prüfen
+            $muster = '/' . preg_quote($modus, '/') . '\\s+\\.screen-frame\\s+\\.' . $fassung . '\\b/';
+            if (!preg_match($muster, $css)) {
+                return false;
+            }
+        }
+    }
+    return true;
+})($ohneKommentare));
+
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,
     'Farben gehören in tokens.css');

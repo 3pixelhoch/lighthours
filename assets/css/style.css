@@ -521,20 +521,26 @@ select {
   overflow: hidden;
   line-height: 0;
 }
-.screen-frame img { max-width: 100%; height: auto; display: block; }
+.screen-frame img { max-width: 100%; height: auto; }
 
 /* Helle und dunkle Fassung der Aufnahmen. Beide Wege, damit auch die manuelle
-   Wahl greift – ein <picture> mit media-Abfrage kennt nur die Systemvorgabe. */
-.screen-dark { display: none; }
+   Wahl greift – ein <picture> mit media-Abfrage kennt nur die Systemvorgabe.
+   
+   Alle Regeln tragen bewusst denselben Aufbau `.screen-frame .screen-*`.
+   Ein knappes `.screen-dark` hätte weniger Gewicht als `.screen-frame img`
+   und würde von dessen display überstimmt – dann erscheinen beide Fassungen
+   übereinander, und zwar nur im Systemmodus bei hellem System. */
+.screen-frame .screen-light { display: block; }
+.screen-frame .screen-dark { display: none; }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .screen-light { display: none; }
-  :root:not([data-theme='light']) .screen-dark  { display: block; }
+  :root:not([data-theme='light']) .screen-frame .screen-light { display: none; }
+  :root:not([data-theme='light']) .screen-frame .screen-dark { display: block; }
 }
-:root[data-theme='dark']  .screen-light { display: none; }
-:root[data-theme='dark']  .screen-dark  { display: block; }
-:root[data-theme='light'] .screen-light { display: block; }
-:root[data-theme='light'] .screen-dark  { display: none; }
+:root[data-theme='dark'] .screen-frame .screen-light { display: none; }
+:root[data-theme='dark'] .screen-frame .screen-dark { display: block; }
+:root[data-theme='light'] .screen-frame .screen-light { display: block; }
+:root[data-theme='light'] .screen-frame .screen-dark { display: none; }
 
 .screen figcaption {
   margin-top: var(--sp-3);
