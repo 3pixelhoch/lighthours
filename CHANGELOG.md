@@ -64,7 +64,7 @@ line in `lib/config.php`, done. No database, no Composer, no dependencies.
   most common stumbling block on first setup
 - Optional email delivery of the subscription link via SMTP or `mail()`, off by
   default, with an abuse throttle
-- 93 tests without a framework: `php tests/run.php`
+- 110 tests without a framework: `php tests/run.php`
 
 ### Search engines
 
