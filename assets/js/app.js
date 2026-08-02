@@ -63,6 +63,29 @@
     });
   })();
 
+  /* ------------------------------------------------------------------ */
+  /* Sprachwahl: außerhalb klicken oder Escape schließt die Liste         */
+  /* <details> allein bleibt sonst offen stehen, bis man erneut darauf    */
+  /* tippt – auf dem Telefon besonders lästig.                           */
+  /* ------------------------------------------------------------------ */
+
+  (function () {
+    var menue = $('lang-menu');
+    if (!menue) { return; }
+
+    document.addEventListener('click', function (ev) {
+      if (menue.open && !menue.contains(ev.target)) { menue.open = false; }
+    });
+
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && menue.open) {
+        menue.open = false;
+        var knopf = menue.querySelector('summary');
+        if (knopf) { knopf.focus(); }
+      }
+    });
+  })();
+
   if (!$('q')) { return; }
 
   var state = {

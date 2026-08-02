@@ -36,8 +36,14 @@ final class Stats
     /** Ältere Tagesdateien werden gelöscht */
     private const AUFBEWAHRUNG_TAGE = 40;
 
-    /** Wie lange die errechnete Zahl gilt, bevor neu gezählt wird */
-    private const ZAEHLUNG_GILT = 3600;
+    /**
+     * Wie lange die errechnete Zahl gilt, bevor neu gezählt wird.
+     *
+     * Fünf Minuten. Das Nachzählen liest dreißig kleine Textdateien und kostet
+     * praktisch nichts; der Zwischenspeicher schützt nur vor Lastspitzen. Bei
+     * sehr viel Aufkommen darf der Wert wieder steigen.
+     */
+    private const ZAEHLUNG_GILT = 300;
 
     /**
      * Einen Abruf vermerken.
@@ -90,7 +96,11 @@ final class Stats
         $zwischenspeicher = $dir . '/summe.json';
         if (is_file($zwischenspeicher) && time() - filemtime($zwischenspeicher) < self::ZAEHLUNG_GILT) {
             $wert = json_decode((string) @file_get_contents($zwischenspeicher), true);
-            if (is_int($wert)) {
+
+            // Eine gespeicherte Null wird nicht geglaubt, sondern neu gezählt.
+            // Sie kann nur aus einem Moment stammen, in dem noch nichts da war –
+            // und blockiert sonst eine Stunde lang die richtige Zahl.
+            if (is_int($wert) && $wert > 0) {
                 return $wert;
             }
         }
@@ -110,7 +120,16 @@ final class Stats
         }
 
         $summe = count($gesehen);
-        @file_put_contents($zwischenspeicher, json_encode($summe), LOCK_EX);
+
+        // Eine Null wird bewusst nicht festgehalten. Sie entsteht, solange noch
+        // kein Abruf vorliegt – etwa direkt nach einem Upload, bei dem der
+        // Zwischenspeicher geleert wurde. Gälte sie eine Stunde, bliebe die
+        // Zeile auch nach dem ersten echten Abruf verschwunden.
+        if ($summe > 0) {
+            @file_put_contents($zwischenspeicher, json_encode($summe), LOCK_EX);
+        } elseif (is_file($zwischenspeicher)) {
+            @unlink($zwischenspeicher);
+        }
 
         return $summe;
     }
@@ -159,6 +178,7 @@ final class Stats
         }
         if (!is_dir($dir)) {
             @mkdir($dir, 0775, true);
+            \LightHours\verzeichnis_schuetzen(LH_CACHE_DIR);
         }
 
         return is_dir($dir) && is_writable($dir) ? $dir : null;

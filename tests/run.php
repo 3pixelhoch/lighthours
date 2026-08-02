@@ -294,6 +294,57 @@ foreach (array_merge(glob(__DIR__ . '/../lib/*.php') ?: [], glob(__DIR__ . '/../
 check('keine festen Domains oder Namen außerhalb der Konfiguration',
     $fest === [], implode(', ', $fest));
 
+echo "\nZählung aktiver Kalender\n";
+
+// Eine zwischengespeicherte Null hätte die Zahl eine Stunde lang blockiert –
+// genau nach einem Upload, bei dem der Zwischenspeicher geleert wurde.
+$stats = (string) file_get_contents(__DIR__ . '/../lib/Stats.php');
+check('gespeicherte Null wird verworfen', str_contains($stats, '$wert > 0'),
+    'sonst gilt eine Null eine Stunde lang');
+check('Null wird gar nicht erst gespeichert', str_contains($stats, 'if ($summe > 0)'));
+
+// Der Zähler muss aus mehreren Tagesdateien zusammenrechnen
+$probe = LH_CACHE_DIR . '/stats';
+@mkdir($probe, 0775, true);
+$gestern = gmdate('Y-m-d', time() - 86400);
+$heute   = gmdate('Y-m-d');
+@file_put_contents($probe . '/' . $gestern . '.txt', "aaaaaaaaaaaaaaaa\n");
+@file_put_contents($probe . '/' . $heute . '.txt', "bbbbbbbbbbbbbbbb\ncccccccccccccccc\n");
+@unlink($probe . '/summe.json');
+
+// Statische Zwischenspeicher der Klasse umgehen, indem frisch gezählt wird
+$gezaehlt = LightHours\Stats::activeCalendars();
+check('zählt über mehrere Tage hinweg', $gezaehlt >= 3, (string) $gezaehlt);
+
+@unlink($probe . '/' . $gestern . '.txt');
+@unlink($probe . '/summe.json');
+
+echo "\nVerzeichnisschutz\n";
+
+// Die zentrale .htaccess allein genügt nicht: Manche Hoster laden mod_alias
+// nicht, dann greift RedirectMatch ins Leere. Jedes Codeverzeichnis trägt
+// deshalb eine eigene Sperre.
+foreach (['lib', 'lang', 'legal', 'partials'] as $ordner) {
+    $datei = __DIR__ . '/../' . $ordner . '/.htaccess';
+    $inhalt = is_file($datei) ? (string) file_get_contents($datei) : '';
+    check("Verzeichnis {$ordner} ist gesperrt",
+        str_contains($inhalt, 'Require all denied') && str_contains($inhalt, 'Deny from all'),
+        'beide Apache-Fassungen nötig');
+}
+
+check('Sperre bricht nicht bei fehlendem Modul', (function (): bool {
+    foreach (['lib', 'lang', 'legal', 'partials'] as $ordner) {
+        $inhalt = (string) @file_get_contents(__DIR__ . '/../' . $ordner . '/.htaccess');
+        if (substr_count($inhalt, '<IfModule') !== 2) {
+            return false;   // ohne IfModule antwortet Apache mit Fehler 500
+        }
+    }
+    return true;
+})());
+
+check('Zwischenspeicher schützt sich beim Anlegen selbst',
+    function_exists('LightHours\\verzeichnis_schuetzen'));
+
 echo "\nDesign-Tokens\n";
 
 $css = (string) file_get_contents(__DIR__ . '/../assets/css/tokens.css');
@@ -366,21 +417,24 @@ check('jede Klasse im Markup hat eine CSS-Regel', $ohneRegel === [],
 // Regeln, ohne die die Seite auf bestimmten Geräten auseinanderfällt.
 // Sie sind mir dreimal beim Umschreiben benachbarter Blöcke verlorengegangen,
 // ohne dass irgendetwas fehlschlug – deshalb diese Prüfung.
+// Gegen Kommentare prüfen wäre wertlos – die zählen nicht als Regel.
+$nurRegeln = preg_replace('#/\\*.*?\\*/#s', '', $style);
+
 $unverzichtbar = [
-    'Kopfzeile bricht auf schmalen Geräten um' => 'display: contents',
-    'Sprachwahl nimmt die zweite Zeile ein'    => '.lang-switch {',
+    'Marke ist auf schmalen Geräten geregelt'  => '.brand-name { font-size',
+    'Sprachwahl ist eine Auswahlliste'         => '.lang-menu summary {',
     'Bildschirmfotos folgen dem Farbmodus'     => '.screen-dark',
     'Farbmodus-Umschalter ist gestaltet'       => '.theme-toggle {',
 ];
 foreach ($unverzichtbar as $was => $spur) {
-    check("Regel vorhanden: {$was}", str_contains($style, $spur), $spur);
+    check("Regel vorhanden: {$was}", str_contains($nurRegeln, $spur), $spur);
 }
 
-check('mobile Kopfzeile hat alle vier Bestandteile', (function (string $style): bool {
+check('mobile Kopfzeile blendet den Sprachnamen aus', (function (string $style): bool {
     if (!preg_match('/@media \(max-width: 640px\) \{(.*?)\n\}\n/s', $style, $treffer)) {
         return false;
     }
-    foreach (['.site-header .wrap', '.header-tools', '.theme-toggle', '.lang-switch'] as $teil) {
+    foreach (['.site-header .wrap', '.brand', '.lang-full', '.lang-current'] as $teil) {
         if (!str_contains($treffer[1], $teil)) {
             return false;
         }
@@ -425,6 +479,28 @@ check('beide Bildfassungen werden für jeden Modus geregelt', (function (string 
     }
     return true;
 })($ohneKommentare));
+
+// Die Kopfzeile stand dreimal fast gleich in den Seiten und lief auseinander.
+$kopfzeilen = 0;
+foreach (['index.php', 'check.php', 'partials/rechtstext.php'] as $datei) {
+    $inhalt = (string) file_get_contents(__DIR__ . '/../' . $datei);
+    if (str_contains($inhalt, '<header class="site-header">')) {
+        $kopfzeilen++;
+    }
+}
+check('Kopfzeile steht nur an einer Stelle', $kopfzeilen === 0,
+    "{$kopfzeilen} Seiten bringen eine eigene mit");
+check('gemeinsame Kopfzeile vorhanden', is_file(__DIR__ . '/../partials/kopfzeile.php'));
+
+// Die Sprungmarke ist beim Zusammenlegen der Kopfzeilen schon einmal
+// verlorengegangen. Sie ist das erste fokussierbare Element der Seite.
+$kopfzeile = (string) file_get_contents(__DIR__ . '/../partials/kopfzeile.php');
+check('Sprungmarke vorhanden', str_contains($kopfzeile, 'class="skip-link"'));
+check('Sprungmarke zielt je Seite anders', str_contains($kopfzeile, 'match ($seiteName)'),
+    'sonst zeigt sie auf einen Anker, den es nicht gibt');
+check('Sprungmarke steht vor der Kopfzeile',
+    strpos($kopfzeile, 'skip-link') < strpos($kopfzeile, '<header'),
+    'sonst lässt sie sich nicht als Erstes anspringen');
 
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,

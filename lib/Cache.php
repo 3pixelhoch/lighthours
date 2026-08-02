@@ -41,6 +41,7 @@ final class Cache
 
         if (!is_dir($dir)) {
             @mkdir($dir, 0775, true);
+            \LightHours\verzeichnis_schuetzen(LH_CACHE_DIR);
         }
 
         self::$usable = is_dir($dir) && is_writable($dir);

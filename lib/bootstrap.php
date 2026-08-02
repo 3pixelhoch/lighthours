@@ -149,6 +149,33 @@ function preferred_country(): string
     return '';
 }
 
+/**
+ * Ein zur Laufzeit erzeugtes Verzeichnis vor Zugriff aus dem Web schützen.
+ *
+ * Betrifft nur cache/. Der Ordner entsteht beim ersten Abruf und kann deshalb
+ * nicht im Auslieferungsstand mitgeschützt werden. Er enthält nichts
+ * Persönliches, aber Zwischenergebnisse gehören nicht ins Web.
+ */
+function verzeichnis_schuetzen(string $dir): void
+{
+    $datei = $dir . '/.htaccess';
+    if ($dir === '' || !is_dir($dir) || is_file($datei)) {
+        return;
+    }
+
+    // Beide Schreibweisen, weil Apache 2.4 und 2.2 sich unterscheiden.
+    // Die IfModule-Klammern verhindern einen Serverfehler, falls eines fehlt.
+    @file_put_contents($datei, implode("\n", [
+        '<IfModule mod_authz_core.c>',
+        '  Require all denied',
+        '</IfModule>',
+        '<IfModule !mod_authz_core.c>',
+        '  Order allow,deny',
+        '  Deny from all',
+        '</IfModule>',
+    ]) . "\n");
+}
+
 /** HTML-sicher ausgeben */
 function h(?string $text): string
 {

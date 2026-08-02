@@ -75,7 +75,57 @@ Fehlt es, arbeitet alles weiter – nur eben ohne Zwischenspeicher.
 
 ---
 
-## 5. Abo-Links brauchen HTTPS
+## 5. Beim Aktualisieren: was bleiben muss
+
+Alle Dateien lassen sich bedenkenlos überschreiben — bis auf zwei Dinge.
+
+### `cache/` niemals löschen
+
+Das ist das **einzige** Verzeichnis, in dem die Anwendung schreibt:
+
+| Inhalt | Bedeutung |
+|---|---|
+| `cache/stats/` | die Zahl aktiver Kalender in der Fußzeile |
+| `cache/limits/` | Missbrauchsbremse des E-Mail-Versands |
+| `cache/v2_geo_*.json` | zwischengespeicherte Ortssuchen |
+
+Der Ordner liegt bewusst **nicht** im Ordner `Website Online`. Wer im
+FTP-Programm einen Abgleich mit Löschen benutzt („Synchronisieren", „Mirror",
+„Nicht vorhandene Dateien entfernen"), löscht ihn damit auf dem Server mit.
+
+Stell dein FTP-Programm auf **Hochladen und Überschreiben** um, ohne Löschen.
+Oder nimm `cache` in die Ausschlussliste auf.
+
+**Halb so wild, wenn es doch passiert:** Alles darin baut sich von selbst wieder
+auf. Die Ortssuchen werden bei Bedarf neu geholt, und die Kalenderzahl steigt
+binnen eines Tages wieder auf den richtigen Stand — denn jede Kalender-App, die
+ein Abo hält, ruft die Adresse täglich ab und wird dabei erneut gezählt.
+
+### `lib/config.php` mit Bedacht
+
+Diese Datei trägt deine Kontaktadresse, die Basis-URL und den Coffee-Namen. In
+`Website Online` steht die richtige Fassung, sie kann also überschrieben werden.
+Wer aber direkt auf dem Server etwas geändert hat, überschreibt es damit.
+
+### `check.php` nach dem Einrichten löschen
+
+Sie wird nur zum Prüfen gebraucht und beim nächsten Upload wieder mitkommen.
+Einfach danach wieder entfernen.
+
+---
+
+## 6. Was ein Upload **nicht** kaputtmachen kann
+
+Bestehende Abonnements. Ein Abo ist nichts als eine Adresse in der Kalender-App
+des Nutzers; auf dem Server steht dazu nichts. Der Kalender wird bei jedem
+Abruf neu berechnet.
+
+Solange `calendar.php` erreichbar bleibt und die Domain dieselbe ist, laufen
+alle Abos weiter — auch wenn du jede einzelne Datei austauschst.
+
+---
+
+## 7. Abo-Links brauchen HTTPS
 
 Kalender-Abos ruft nicht dein Gerät ab, sondern der Server des Kalenderanbieters:
 

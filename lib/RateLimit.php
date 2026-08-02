@@ -73,6 +73,7 @@ final class RateLimit
         }
         if (!is_dir($dir)) {
             @mkdir($dir, 0775, true);
+            \LightHours\verzeichnis_schuetzen(LH_CACHE_DIR);
         }
 
         return is_dir($dir) && is_writable($dir) ? $dir : null;

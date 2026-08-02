@@ -85,14 +85,55 @@ img, svg { max-width: 100%; height: auto; display: block; }
   letter-spacing: var(--tracking-tight);
 }
 
-.lang-switch { display: flex; gap: var(--sp-1); }
-.lang-switch a {
-  font-size: var(--text-sm); font-weight: 600; text-decoration: none;
-  color: var(--fg-muted); padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radius-pill); transition: var(--transition);
+/* ---------- Sprachwahl ---------------------------------------------------- */
+
+/* Eine Auswahlliste statt sechs Kürzeln nebeneinander. Die Reihe verdrängte auf
+   dem Telefon die Marke, und mit jeder weiteren Sprache würde es enger.
+   <details> kommt ohne JavaScript aus. */
+
+.lang-menu { position: relative; }
+
+.lang-menu summary {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border: 1.5px solid var(--border); border-radius: var(--radius-pill);
+  font-size: var(--text-sm); font-weight: 600; color: var(--fg-muted);
+  cursor: pointer; list-style: none;
+  transition: border-color var(--transition), color var(--transition);
 }
-.lang-switch a:hover { background: var(--sunken); color: var(--fg); }
-.lang-switch a[aria-current='true'] { background: var(--accent-weak); color: var(--accent-text); }
+.lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu summary::marker { content: ''; }
+.lang-menu summary:hover { border-color: var(--line-strong); color: var(--fg); }
+.lang-menu summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.lang-chevron { width: 0.95rem; height: 0.95rem; flex: none; transition: transform var(--transition); }
+.lang-menu[open] .lang-chevron { transform: rotate(180deg); }
+
+/* Auf breiten Schirmen der ausgeschriebene Name, auf schmalen nur das Kürzel */
+.lang-current { display: none; }
+.lang-full { display: inline; }
+
+.lang-list {
+  position: absolute; right: 0; top: calc(100% + var(--sp-2));
+  z-index: 60; min-width: 11rem;
+  list-style: none; margin: 0; padding: var(--sp-2);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.lang-list a {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base); text-decoration: none; color: var(--fg);
+  white-space: nowrap;
+}
+.lang-list a:hover { background: var(--sunken); }
+.lang-list a[aria-current='true'] { background: var(--accent-weak); color: var(--accent-text); font-weight: 600; }
+.lang-code {
+  min-width: 2rem; font-size: var(--text-sm); font-weight: 600;
+  color: var(--fg-muted); letter-spacing: 0.04em;
+}
+.lang-list a[aria-current='true'] .lang-code { color: var(--accent-text); }
 
 /* ---------- Hero -------------------------------------------------------- */
 
@@ -347,41 +388,30 @@ select {
 
 /* ---------- Kleine Bildschirme ------------------------------------------ */
 
-/* Auf dem Telefon passen Marke, Umschalter und sechs Sprachkürzel nicht in eine
-   Zeile: zusammen brauchen sie rund 330 px, ein iPhone SE bietet 272. Deshalb
-   zwei Zeilen – oben Marke und Umschalter, darunter die Sprachwahl über die
-   volle Breite. `display: contents` löst die Zwischengruppe auf, damit ihre
-   Kinder wie eigene Elemente umbrechen können. */
+/* Auf dem Telefon bleibt die Kopfzeile einzeilig: Marke links, Farbmodus und
+   Sprachwahl rechts. Möglich wird das durch die Auswahlliste – sechs Kürzel
+   nebeneinander hätten die Marke aus dem Bild gedrängt. */
 @media (max-width: 640px) {
-  .site-header .wrap {
-    flex-wrap: wrap;
-    row-gap: var(--sp-2);
-    column-gap: var(--sp-3);
-    padding-block: var(--sp-3);
-    min-height: 0;
-  }
-  .header-tools { display: contents; }
+  .site-header .wrap { min-height: 3.75rem; padding-block: var(--sp-3); }
+  .brand svg { width: 1.7rem; height: 1.7rem; }
+  .brand-name { font-size: 1.2rem; }
 
-  .brand { order: 1; }
-  .brand svg { width: 1.6rem; height: 1.6rem; }
-  .brand-name { font-size: 1.15rem; }
+  /* Nur das Kürzel, der ausgeschriebene Name braucht zu viel Platz */
+  .lang-full { display: none; }
+  .lang-current { display: inline; }
+  .lang-menu summary { padding: var(--sp-2) var(--sp-3); }
+}
 
-  .theme-toggle { order: 2; margin-left: auto; }
+/* Unter 380 px wird es rechnerisch knapp: Marke, Farbmodus und Sprachwahl
+   brauchen zusammen rund 283 px, ein iPhone SE bietet 272. Ein Grad kleiner
+   genügt, statt die Zeile umbrechen zu lassen. */
+@media (max-width: 380px) {
+  .brand { gap: var(--sp-2); }
+  .brand svg { width: 1.5rem; height: 1.5rem; }
+  .brand-name { font-size: 1.05rem; }
+  .theme-toggle { width: 2rem; height: 2rem; }
+  .lang-menu summary { padding: var(--sp-2); gap: var(--sp-1); }
 
-  .lang-switch {
-    order: 3;
-    width: 100%;
-    justify-content: space-between;
-    gap: 0;
-    padding-top: var(--sp-2);
-    border-top: 1px solid var(--border);
-  }
-  .lang-switch a {
-    font-size: var(--text-xs);
-    padding: var(--sp-2) var(--sp-1);
-    min-width: 2.6rem;
-    text-align: center;
-  }
 
   .hero { padding: var(--sp-7) 0 var(--sp-6); }
   .step { padding: var(--sp-5) var(--sp-4); }
@@ -401,7 +431,7 @@ select {
 
 /* ---------- Farbmodus-Umschalter ---------------------------------------- */
 
-.header-tools { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.header-tools { display: flex; align-items: center; gap: var(--sp-3); }
 
 .theme-toggle {
   display: inline-flex; align-items: center; justify-content: center;

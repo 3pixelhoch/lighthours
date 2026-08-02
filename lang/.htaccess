@@ -1,0 +1,18 @@
+# Dieses Verzeichnis enthält nur Programmcode und wird nie direkt aufgerufen.
+#
+# Der Schutz liegt bewusst hier und nicht allein in der zentralen .htaccess:
+# Manche Hoster laden mod_alias nicht, andere werten Rewrite-Regeln in
+# Unterverzeichnissen anders aus. Eine Sperre im Verzeichnis selbst ist der
+# Weg, der am wenigsten voraussetzt.
+#
+# Beide Schreibweisen, weil Apache 2.4 und 2.2 sich hier unterscheiden.
+# Die IfModule-Klammern verhindern einen Serverfehler, falls ein Modul fehlt.
+
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
