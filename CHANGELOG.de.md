@@ -64,7 +64,7 @@ Composer, keine Abhängigkeiten.
   die häufigste Stolperfalle beim ersten Aufsetzen
 - Freiwilliger E-Mail-Versand des Abo-Links über SMTP oder `mail()`,
   ab Werk ausgeschaltet, mit Missbrauchsbremse
-- 82 Tests ohne Framework: `php tests/run.php`
+- 119 Tests ohne Framework: `php tests/run.php`
 
 ### Suchmaschinen
 
