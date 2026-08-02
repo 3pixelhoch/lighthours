@@ -24,6 +24,16 @@ spl_autoload_register(static function (string $class): void {
 mb_internal_encoding('UTF-8');
 date_default_timezone_set('UTC');
 
+/*
+ * Kürzeste Darstellung von Fließkommazahlen in JSON.
+ *
+ * Steht serialize_precision auf 17 – auf manchen Webspaces die Voreinstellung –,
+ * liefert die API 53.55109999999999814690454513765871524810791015625 statt
+ * 53.5511. Zahlenwert und Rundung sind identisch, aber lesbar ist es nicht.
+ * Mit -1 wählt PHP die kürzeste Schreibweise, die verlustfrei zurückgelesen wird.
+ */
+ini_set('serialize_precision', '-1');
+
 /**
  * Basis-URL der Installation ermitteln (für Abo-Links).
  * Kann in config.php fest gesetzt werden, sonst automatisch aus der Anfrage.

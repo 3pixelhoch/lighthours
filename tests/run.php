@@ -154,8 +154,33 @@ foreach ($zonen as [$ort, $la, $lo, $cc, $soll]) {
     check("Zeitzone {$ort}", $ist === $soll, "{$ist} statt {$soll}");
 }
 
+// Ohne Ländercode besteht die Kandidatenliste aus allen Zonen der Welt. Unter
+// den gleich tickenden gewann früher die kürzeste Kennung – also UTC oder
+// Etc/GMT. Für Reykjavík kam so "UTC" heraus: zeitlich richtig, als
+// Kalenderbeschriftung falsch.
+$ohneLand = [
+    ['Reykjavík',   64.1466, -21.9426, 'Atlantic/Reykjavik'],
+    ['Accra',        5.6037,  -0.1870, 'Africa/Accra'],
+    ['Lissabon',    38.7223,  -9.1393, 'Europe/Lisbon'],
+    ['Dublin',      53.3498,  -6.2603, 'Europe/Dublin'],
+    ['London',      51.5072,  -0.1276, 'Europe/London'],
+];
+foreach ($ohneLand as [$ort, $la, $lo, $soll]) {
+    $ist = Timezone::guess($la, $lo);
+    check("Zeitzone ohne Ländercode: {$ort}", $ist === $soll, "{$ist} statt {$soll}");
+}
+check('ohne Ländercode nie eine Etc-Kennung',
+    !str_starts_with(Timezone::guess(64.1466, -21.9426), 'Etc/'));
+
 check('ungültige Kennung wird erkannt', !Timezone::isValid('Mars/Olympus'));
 check('gültige Kennung wird akzeptiert', Timezone::isValid('Europe/Berlin'));
+
+// Auf manchen Webspaces steht serialize_precision auf 17. Dann liefert die
+// API 53.55109999999999814690454513765871524810791015625 statt 53.5511.
+// bootstrap.php setzt den Wert deshalb selbst.
+check('JSON gibt kurze Fließkommazahlen aus',
+    json_encode(['lat' => 53.5511]) === '{"lat":53.5511}',
+    json_encode(['lat' => 53.5511]));
 
 echo "\nKalenderdatei\n";
 
@@ -501,6 +526,14 @@ check('Sprungmarke zielt je Seite anders', str_contains($kopfzeile, 'match ($sei
 check('Sprungmarke steht vor der Kopfzeile',
     strpos($kopfzeile, 'skip-link') < strpos($kopfzeile, '<header'),
     'sonst lässt sie sich nicht als Erstes anspringen');
+
+// Das Logo führte im Impressum auf das Impressum: Es benutzte dieselbe
+// Adressfunktion wie die Sprachwahl, die bewusst auf der Seite bleibt.
+check('Marke führt zur Startseite',
+    preg_match('~class="brand" href="<\?= LightHours\\\\h\(\x27\./\?lang=\x27~', $kopfzeile) === 1,
+    'sonst zeigt das Logo auf die Seite, auf der man schon steht');
+check('Marke benutzt nicht die Sprachadresse',
+    !preg_match('/class="brand" href="[^"]*sprachAdresse/', $kopfzeile));
 
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,

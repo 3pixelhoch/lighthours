@@ -90,6 +90,19 @@ final class Timezone
             static fn(string $id): bool => $signaturen[$id] === $signaturen[$naechste]
         ));
 
+        // Nicht-geografische Kennungen aussortieren. Ohne Landescode besteht die
+        // Kandidatenliste aus allen Zonen der Welt, und dann gewinnt die
+        // Tiefenregel unten immer UTC oder Etc/GMT – sie haben keinen Schrägstrich.
+        // Für Reykjavík kam so "UTC" heraus: zeitlich richtig, als Beschriftung
+        // eines Kalenders aber falsch.
+        $geografisch = array_values(array_filter(
+            $gleichwertig,
+            static fn(string $id): bool => str_contains($id, '/') && !str_starts_with($id, 'Etc/')
+        ));
+        if ($geografisch !== []) {
+            $gleichwertig = $geografisch;
+        }
+
         $minTiefe = min(array_map(static fn(string $id): int => substr_count($id, '/'), $gleichwertig));
         $flach    = array_values(array_filter(
             $gleichwertig,

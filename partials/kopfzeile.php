@@ -33,7 +33,14 @@ $sprungziel = '#' . match ($seiteName) {
     default => 'inhalt',
 };
 
-/** Adresse derselben Seite in einer anderen Sprache */
+/**
+ * Adresse *derselben* Seite in einer anderen Sprache.
+ *
+ * Nur für die Sprachwahl gedacht: dort will man die Seite behalten und die
+ * Sprache wechseln. Die Marke darf das nicht benutzen – sie führt immer zur
+ * Startseite. Vorher tat sie es doch, und im Impressum verwies das Logo
+ * damit auf das Impressum.
+ */
 $sprachAdresse = static function (string $sprache) use ($seiteName): string {
     $datei = $seiteName === 'index' ? '' : $seiteName . '.php';
 
@@ -64,7 +71,7 @@ $sprachAdresse = static function (string $sprache) use ($seiteName): string {
 
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="<?= LightHours\h($sprachAdresse($lang)) ?>">
+    <a class="brand" href="<?= LightHours\h('./?lang=' . $lang) ?>">
       <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
         <rect x="10" y="17"   width="44" height="7" rx="3.5" fill="var(--gold-400)"/>
         <rect x="15" y="28.5" width="34" height="7" rx="3.5" fill="var(--gold-500)"/>
