@@ -1,0 +1,15 @@
+# Zwischenspeicher und Zählung – entstehen zur Laufzeit
+cache/
+
+# Auslieferungsordner: wird aus dem Projekt erzeugt, nicht gepflegt
+Website Online/
+
+# Betriebssystem und Editoren
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Protokolle
+*.log

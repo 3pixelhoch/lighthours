@@ -1,0 +1,78 @@
+# lighthours – Apache-Konfiguration für klassisches Webhosting
+
+# --- Verzeichnisse schützen, die nie direkt aufgerufen werden sollen -------
+RedirectMatch 404 ^/(lib|lang|cache|partials|legal|tests)/
+
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(php)$">
+    Require all granted
+  </FilesMatch>
+</IfModule>
+
+# --- Verzeichnisauflistung aus ---------------------------------------------
+Options -Indexes
+
+# --- Zeichensatz ------------------------------------------------------------
+AddDefaultCharset UTF-8
+
+# --- Kompression ------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/calendar
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Zwischenspeicherung im Browser -----------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css              "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2            "access plus 1 year"
+  ExpiresByType image/svg+xml         "access plus 1 month"
+  ExpiresByType image/webp            "access plus 1 month"
+  ExpiresByType image/png             "access plus 1 month"
+  ExpiresByType text/calendar         "access plus 12 hours"
+</IfModule>
+
+# --- Schriften dürfen auch von Unterdomains geladen werden ------------------
+<IfModule mod_headers.c>
+  <FilesMatch "\.(woff2?)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+
+  # Grundlegende Sicherheitskopfzeilen
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# --- MIME-Typen, die manche Hoster nicht kennen ------------------------------
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType text/calendar .ics
+  AddType application/manifest+json .webmanifest
+  AddType image/webp .webp
+</IfModule>
+
+# --- Hübsche Adressen (optional, funktioniert auch ohne) --------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # /calendar.ics statt /calendar.php
+  RewriteRule ^calendar\.ics$ calendar.php [QSA,L]
+
+  # sitemap.xml und robots.txt werden erzeugt, damit die Adressen zur
+  # jeweiligen Installation passen statt fest eingetragen zu sein
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^robots\.txt$  robots.php  [L]
+
+  # /datenschutz und /impressum ohne Endung
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(datenschutz|impressum)$ $1.php [QSA,L]
+
+  # /api/times statt /api/times.php
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^api/([a-z]+)$ api/$1.php [QSA,L]
+
+</IfModule>

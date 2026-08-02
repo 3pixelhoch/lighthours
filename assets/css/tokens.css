@@ -1,0 +1,207 @@
+/* =========================================================================
+   lighthours – Designsystem: Tokens
+   Einzige Quelle für Farben, Typografie, Abstände und Radien.
+   Wer das Erscheinungsbild ändern will, ändert nur diese Datei.
+   ========================================================================= */
+
+/* ---------- Schrift (lokal eingebunden, keine externen Aufrufe) ---------- */
+
+/* Outfit – geometrisch, serifenlos, variabel (Achse wght 100–900).
+   Eine Familie für alles: Überschriften, Fließtext, Formulare, Wortmarke. */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/outfit-var-latin.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/outfit-var-latin-ext.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+                 U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+                 U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* ---------- Markenfarben ------------------------------------------- */
+  /* Goldene Stunde: warmes Licht kurz über dem Horizont */
+  --gold-100: #FDF3E3;
+  --gold-200: #F7DFB6;
+  --gold-300: #F2BE6B;
+  --gold-400: #E09A42;  /* oberster Balken der Bildmarke */
+  --gold-500: #C97B2C;  /* Primärfarbe, mittlerer Balken */
+  --gold-600: #A25F1E;
+  --gold-700: #7A4615;
+
+  /* Blaue Stunde: Dämmerung, kurz vor und nach der Sonne */
+  --blue-400: #4E6FA5;  /* Punkte vor den blauen Terminarten */
+  --blue-500: #3C5A8F;  /* Sekundärfarbe, unterster Balken der Marke */
+
+  /* Neutrale Töne – leicht warm, damit Weiß nicht klinisch wirkt */
+  --paper:   #FBFAF8;
+  --surface: #FFFFFF;
+  --sunken:  #F4F2EE;
+  --line:    #E7E3DC;
+  --line-strong: #D6D0C6;
+  --ink:     #16171B;
+  --ink-soft:#3E4148;
+  --muted:   #6C7076;
+
+  /* ---------- Semantische Zuweisungen -------------------------------- */
+  --bg:          var(--paper);
+  --fg:          var(--ink);
+  --fg-muted:    var(--muted);
+  /* Gold trennt sich in zwei Rollen, weil ein einziger Ton nicht beides kann:
+     --accent      füllt Flächen (Schaltflächen, Punkte) – dort steht dunkler Text drauf
+     --accent-text färbt Text und feine Linien auf hellem Grund (4,8:1 gegen Papier)
+     Ein helles Gold als Textfarbe wäre unlesbar, ein dunkles als Fläche stumpf. */
+  --accent:      var(--gold-400);
+  --accent-text: var(--gold-600);
+  --accent-weak: var(--gold-100);
+  --border:      var(--line);
+  --card:        var(--surface);
+  --focus:       var(--gold-600);
+  --on-accent:   #17130C;   /* dunkler Text auf goldener Fläche – 7,8:1 */
+
+  /* Fehler und Warnungen. Bewusst ein eigener Ton: Gold ist die Farbe der
+     Primäraktion – dieselbe Farbe für „hat geklappt“ und „ist schiefgegangen“
+     zu verwenden, nimmt beiden Meldungen die Eindeutigkeit. */
+  --danger:      #B3261E;
+  --danger-weak: #FCEEEC;
+
+  /* ---------- Typografie --------------------------------------------- */
+  --font: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Geometrische Schriften wirken ohne negative Laufweite zu luftig */
+  --tracking-tight: -0.035em;   /* große Überschriften, Wortmarke */
+  --tracking-snug:  -0.02em;    /* mittlere Überschriften */
+
+  /* Fließende Größen: skalieren mit dem Viewport, ohne Media Queries.
+
+     Outfit hat eine eher kleine x-Höhe – bei 16 px wirkt Fließtext gedrungen.
+     Die Grundgröße liegt deshalb bei 17 px, die Nebengrößen ziehen mit. Unter
+     14 px geht nichts, das ist auf kleinen Bildschirmen die Schmerzgrenze. */
+  --text-xs:   0.875rem;   /* 14 px – Hinweise, Beschriftungen */
+  --text-sm:   0.9375rem;  /* 15 px – Nebentext, Formularhilfen */
+  --text-base: 1.0625rem;  /* 17 px – Fließtext */
+  --text-lg:   1.1875rem;  /* 19 px – hervorgehobener Text */
+  --text-xl:   clamp(1.25rem, 0.5vw + 1.1rem, 1.45rem);
+  --text-2xl:  clamp(1.6rem,  1.2vw + 1.3rem, 2.1rem);
+  --text-3xl:  clamp(2.1rem,  2.6vw + 1.4rem, 3.4rem);
+  --text-4xl:  clamp(2.6rem,  4.4vw + 1.4rem, 4.6rem);
+
+  --leading-tight: 1.1;
+  --leading-snug:  1.35;
+  --leading-normal:1.68;
+
+  /* ---------- Abstände (4-px-Raster) --------------------------------- */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
+  --sp-9: 6rem;
+
+  /* ---------- Form ---------------------------------------------------- */
+  --radius-sm:  6px;
+  --radius:     12px;
+  --radius-lg:  18px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(22, 23, 27, 0.05);
+  --shadow:    0 4px 16px rgba(22, 23, 27, 0.07);
+
+  --measure: 60ch;      /* angenehme Lesebreite */
+  --wrap: 1080px;       /* Inhaltsbreite */
+  --wrap-narrow: 760px;
+
+  --transition: 160ms cubic-bezier(0.32, 0.72, 0.24, 1);
+
+  color-scheme: light dark;
+}
+
+/* =========================================================================
+   Dunkelmodus
+
+   Zwei Wege führen hierher:
+     1. Systemvorgabe  – greift, solange der Nutzer nichts anderes gewählt hat
+     2. Manuelle Wahl  – data-theme am <html>-Element, gesetzt vom Umschalter
+
+   Die Werte stehen deshalb zweimal. Das ist Absicht: ohne Bauwerkzeug lässt sich
+   ein Block in CSS nicht wiederverwenden. Der Testlauf (tests/run.php) vergleicht
+   beide Blöcke und schlägt an, sobald sie auseinanderlaufen.
+   ========================================================================= */
+
+/* --- 1. Systemvorgabe ---------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper:   #0E1014;
+    --surface: #171A20;
+    --sunken:  #12141A;
+    --line:    #262A32;
+    --line-strong: #363B45;
+    --ink:     #ECEAE6;
+    --ink-soft:#C6C8CC;
+    --muted:   #969AA3;
+
+    --bg:          var(--paper);
+    --fg:          var(--ink);
+    --fg-muted:    var(--muted);
+    --accent:      var(--gold-300);
+    --accent-text: var(--gold-300);
+    --accent-weak: rgba(242, 190, 107, 0.12);
+    --border:      var(--line);
+    --card:        var(--surface);
+    --focus:       var(--gold-300);
+    --on-accent:   #17130C;
+
+    --danger:      #F2B8B5;
+    --danger-weak: rgba(242, 184, 181, 0.12);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow:    0 4px 16px rgba(0, 0, 0, 0.45);
+
+    color-scheme: dark;
+  }
+}
+
+/* --- 2. Manuelle Wahl ---------------------------------------------------- */
+:root[data-theme='dark'] {
+    --paper:   #0E1014;
+    --surface: #171A20;
+    --sunken:  #12141A;
+    --line:    #262A32;
+    --line-strong: #363B45;
+    --ink:     #ECEAE6;
+    --ink-soft:#C6C8CC;
+    --muted:   #969AA3;
+
+    --bg:          var(--paper);
+    --fg:          var(--ink);
+    --fg-muted:    var(--muted);
+    --accent:      var(--gold-300);
+    --accent-text: var(--gold-300);
+    --accent-weak: rgba(242, 190, 107, 0.12);
+    --border:      var(--line);
+    --card:        var(--surface);
+    --focus:       var(--gold-300);
+    --on-accent:   #17130C;
+
+    --danger:      #F2B8B5;
+    --danger-weak: rgba(242, 184, 181, 0.12);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow:    0 4px 16px rgba(0, 0, 0, 0.45);
+
+    color-scheme: dark;
+}
+
+/* Ausdrücklich hell gewählt: Systemvorgabe überstimmen */
+:root[data-theme='light'] {
+  color-scheme: light;
+}
