@@ -1,79 +1,81 @@
-# Änderungen
+# Changelog
 
-Das Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
-die Nummerierung [Semantic Versioning](https://semver.org/lang/de/).
+Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+versioning follows [Semantic Versioning](https://semver.org/).
+
+[Deutsche Fassung](CHANGELOG.de.md)
 
 ## [1.0.0] – 2026-08-02
 
-Erste vollständige Fassung. Läuft auf jedem Webspace mit PHP 8.1: hochladen,
-eine Zeile in `lib/config.php` eintragen, fertig. Keine Datenbank, kein
-Composer, keine Abhängigkeiten.
+First complete release. Runs on any web space with PHP 8.1: upload, set one
+line in `lib/config.php`, done. No database, no Composer, no dependencies.
 
-### Kalender
+### Calendar
 
-- Goldene und Blaue Stunde, morgens und abends, für jeden Ort der Welt
-- Abonnierbarer iCal-Kalender und ICS-Download
-- Zeitraum von drei Monaten bis fünf Jahren oder eigenes Enddatum
-- Rollierendes Abo, das mit dem Datum mitwandert und nie leer läuft
-- Optionale Erinnerung 15, 30 oder 60 Minuten vor Beginn
-- Echte Zeitzonenangabe samt Sommerzeitwechseln (VTIMEZONE)
-- Stabile Termin-Kennungen, sodass Kalender-Apps keine Dubletten anlegen
+- Golden and blue hour, morning and evening, for any place on earth
+- Subscribable iCal feed and ICS download
+- Period from three months to five years, or a custom end date
+- Rolling subscription that moves with the date and never runs empty
+- Optional reminder 15, 30 or 60 minutes before a phase starts
+- Proper `VTIMEZONE` including daylight saving transitions
+- Stable event UIDs, so calendar apps don't create duplicates
 
-### Berechnung
+### Calculation
 
-- Sonnenstand nach dem vollständigen NOAA-Verfahren mit atmosphärischer
-  Refraktion – gerechnet wird mit der scheinbaren Sonnenhöhe
-- Gegen eine unabhängige Referenz geprüft: über ein volles Jahr an sechs Orten
-  von Reykjavík bis Sydney im Mittel 0,9 Sekunden Abweichung, maximal drei
-- Termine werden am Ortsdatum verankert, nicht am UTC-Datum
-- In Polarnähe entfallen nicht existierende Phasen, statt eine Zeit zu erfinden
+- Sun position using the full NOAA algorithm with atmospheric refraction —
+  calculated from the apparent solar altitude
+- Verified against an independent implementation: across a full year at six
+  locations from Reykjavík to Sydney, mean deviation 0.9 seconds, worst case 3
+- Events anchored to the local date, not the UTC date
+- Near the poles, non-existent phases are omitted instead of given an invented
+  time
 
-### Ortssuche
+### Place search
 
-- Eingabe von Stadt, Adresse, Region oder Postleitzahl – nie Koordinaten
-- Zeitzone wird aus dem Ort abgeleitet; gleich tickende Zonen werden auf die
-  geläufige Schreibweise zusammengefasst
-- Mehrdeutige Postleitzahlen werden nach Herkunftsland gewichtet
-- Läuft serverseitig, damit die IP-Adresse der Besucher OpenStreetMap nicht
-  erreicht; Ergebnisse werden sieben Tage zwischengespeichert
+- Enter a city, address, region or postcode — never coordinates
+- Time zone derived from the place; zones with identical behaviour collapse to
+  the common spelling
+- Ambiguous postcodes weighted by the visitor's likely country
+- Runs server-side so visitor IP addresses never reach OpenStreetMap; results
+  cached for seven days
 
-### Oberfläche
+### Interface
 
-- Karte mit verschiebbarem Mittelpunkt und wählbarem Gültigkeitsradius
-- Anzeige der maximalen zeitlichen Abweichung im gewählten Umkreis
-- Vorschau der nächsten Termine noch vor dem Abonnieren
-- Hell- und Dunkelmodus, wahlweise nach Systemvorgabe oder manuell
-- Sechs Sprachen: Deutsch, Englisch, Italienisch, Französisch, Spanisch,
-  Portugiesisch – auch die Kalendertermine selbst
+- Map with draggable centre and selectable validity radius
+- Shows the maximum time deviation within the chosen radius
+- Preview of the next events before subscribing
+- Light and dark mode, following the system or set manually
+- Six languages: German, English, Italian, French, Spanish, Portuguese —
+  including the calendar events themselves
 
-### Datenschutz
+### Privacy
 
-- Keine Cookies, keine Konten, keine Werbenetzwerke, kein Tracking
-- Schriften und Kartenbibliothek liegen lokal; kein Aufruf an Google oder ein CDN
-- Kartenkacheln werden erst nach Auswahl eines Orts geladen
-- Anonyme Zählung aktiver Kalender über einen Hash der Kalendereinstellungen,
-  ohne IP-Adresse, ohne Zeitstempel
-- Datenschutzerklärung und Impressum als eigene Seiten
+- No cookies, no accounts, no advertising networks, no tracking
+- Fonts and map library self-hosted; nothing loads from Google or a CDN
+- Map tiles loaded only after a place has been selected
+- Anonymous count of active calendars via a hash of the calendar settings,
+  without IP address and without a timestamp
+- Privacy statement and legal notice as separate pages
 
-### Betrieb
+### Operation
 
-- `check.php` prüft die Installation und benennt konkret, was fehlt
-- Deutliche Meldung, solange die Kontaktadresse für die Ortssuche fehlt –
-  die häufigste Stolperfalle beim ersten Aufsetzen
-- Freiwilliger E-Mail-Versand des Abo-Links über SMTP oder `mail()`,
-  ab Werk ausgeschaltet, mit Missbrauchsbremse
-- 82 Tests ohne Framework: `php tests/run.php`
+- `check.php` verifies the installation and names what is missing
+- Clear message while the contact address for the place search is unset — the
+  most common stumbling block on first setup
+- Optional email delivery of the subscription link via SMTP or `mail()`, off by
+  default, with an abuse throttle
+- 93 tests without a framework: `php tests/run.php`
 
-### Suchmaschinen
+### Search engines
 
-- Kanonische Adressen, Sprachalternativen und `x-default`
-- Vorschaubilder für soziale Netzwerke in allen sechs Sprachen
-- Strukturierte Daten als `WebApplication`
-- `robots.txt` und eine Sitemap, die neue Sprachen selbsttätig aufnimmt
+- Canonical URLs, language alternates and `x-default`
+- Social preview images in all six languages
+- Structured data as `WebApplication`
+- `robots.txt` and a sitemap that picks up new languages by itself
 
-### Gestaltung
+### Design
 
-- Bildmarke aus drei gestapelten Balken: der Horizont als Lichtbänder
-- Outfit als einzige Schrift, variabel und lokal eingebunden (45 KB)
-- Sämtliche Farben, Größen und Abstände in `assets/css/tokens.css`
-- Alle Kontrastwerte erfüllen in beiden Modi WCAG AA
+- Mark of three stacked bars: the horizon as bands of light
+- Outfit as the single typeface, variable and self-hosted (45 KB)
+- Every colour, size and spacing value in `assets/css/tokens.css`
+- All contrast ratios meet WCAG AA in both modes

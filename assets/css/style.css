@@ -581,3 +581,8 @@ select {
   border-top: 1px solid var(--border);
   font-size: var(--text-sm); color: var(--fg-muted) !important;
 }
+
+/* Verweis am Fuß einer Erklärkachel */
+.tile-link { margin-top: var(--sp-3) !important; font-size: var(--text-sm); font-weight: 600; }
+.tile-link a { color: var(--accent-text); text-decoration: none; }
+.tile-link a:hover { text-decoration: underline; }

@@ -222,4 +222,5 @@ return [
     'meta.privacy_desc' => 'Qué guarda lighthours y qué no: sin cookies, sin cuentas, sin redes publicitarias. Declaración completa.',
     'meta.imprint_desc' => 'Aviso legal y contacto de lighthours, el calendario de código abierto para la hora dorada y la hora azul.',
     'meta.check_desc' => 'Comprobación de la instalación.',
+    'os.link' => 'Código fuente en GitHub',
 ];

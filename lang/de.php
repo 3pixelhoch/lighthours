@@ -221,4 +221,5 @@ return [
     'meta.privacy_desc' => 'Was lighthours speichert und was nicht: keine Cookies, keine Konten, keine Werbenetzwerke. Vollständige Datenschutzerklärung.',
     'meta.imprint_desc' => 'Anbieterkennzeichnung und Kontakt für lighthours, den quelloffenen Kalender für Goldene und Blaue Stunde.',
     'meta.check_desc' => 'Selbstprüfung der Installation.',
+    'os.link' => 'Quellcode auf GitHub',
 ];

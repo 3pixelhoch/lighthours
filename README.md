@@ -1,292 +1,266 @@
-# lighthours
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/img/readme-dunkel.png">
+  <img alt="lighthours – golden hour, in your calendar" src="assets/img/readme-hell.png">
+</picture>
 
-**Goldene und Blaue Stunde als Kalender-Abo – für jeden Ort der Welt.**
+[![Version](https://img.shields.io/badge/version-1.0.0-C97B2C)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-3C5A8F)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4)](https://www.php.net/)
+[![No dependencies](https://img.shields.io/badge/dependencies-none-16171B)](#installation)
 
-[![Fassung](https://img.shields.io/badge/Fassung-1.0.0-C97B2C)](CHANGELOG.md)
-[![Lizenz](https://img.shields.io/badge/Lizenz-MIT-3C5A8F)](LICENSE)
+**[lighthours.app](https://lighthours.app)** · [Deutsche Fassung](README.de.md)
 
-→ [lighthours.app](https://lighthours.app)
+Golden hour and blue hour for any place on earth, delivered as a calendar you
+subscribe to once and never think about again. No app, no account, no email
+required.
 
-lighthours berechnet die täglichen Lichtzeiten für beliebige Koordinaten und liefert
-sie als abonnierbaren iCal-Kalender. Reines PHP und JavaScript, keine Datenbank,
-keine Abhängigkeiten, kein Composer. Hochladen und läuft.
+Plain PHP and JavaScript. No database, no Composer, no build step. Upload it to
+the cheapest shared hosting you can find and it runs.
+
+---
+
+## What it looks like
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/img/screens/kalender-woche-dunkel.webp">
+  <img alt="Two consecutive days in week view, each with a golden hour event" src="assets/img/screens/kalender-woche-hell.webp" width="49%">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/img/screens/kalender-termin-dunkel.webp">
+  <img alt="An opened event showing place, time and description" src="assets/img/screens/kalender-termin-hell.webp" width="49%">
+</picture>
+
+Two days in a row in Berlin: 18:52, then 18:54. Golden hour shifts by a minute
+or two every day — nobody keeps that in their head. That is the entire point.
+
+---
+
+## Why bother
+
+There are excellent apps for this. PhotoPills and Sun Surveyor do far more than
+this does — planning, augmented reality, milky way. They all share one property:
+you have to open them.
+
+This does the one thing they don't. The times sit in the calendar you already
+check every morning, next to your shoots. Nothing to open, nothing to remember.
+
+---
+
+## Accuracy
+
+Sun position uses the full NOAA algorithm including **atmospheric refraction**,
+so it works with the *apparent* altitude — where the sun actually appears, not
+where pure geometry puts it. Near the horizon that is roughly two minutes of
+difference, which is exactly where it matters.
+
+| Phase | Sun altitude |
+|---|---|
+| Golden hour | −4° to +6° |
+| Blue hour | −6° to −4° |
+
+Verified against an independent implementation (Python/Astral) across a full
+year at six locations from Reykjavík to Sydney:
+
+| | |
+|---|---|
+| Mean deviation | **0.9 seconds** |
+| Worst case | 3 seconds |
+| Comparisons | 12,709 |
+
+Two details that most implementations get wrong:
+
+- **Events are anchored to the local date**, not the UTC date. Without that,
+  a calendar for Sydney puts the morning golden hour on the wrong day.
+- **Near the poles, non-existent phases are omitted** rather than given an
+  invented time. On 21 December in Reine, Lofoten, you get blue hour but no
+  golden hour — the sun peaks at −1.4°, so it crosses −4° but never +6°.
+
+---
+
+## Features
+
+- Search by city, address, region or postcode — never coordinates
+- Interactive map with a draggable centre and a selectable validity radius
+- Shows the maximum time deviation within that radius, so one calendar covers
+  your whole region instead of one per location
+- Period from 3 months to 5 years, or a custom end date
+- **Rolling subscription** that moves with the date and never runs empty
+- Optional reminder 15, 30 or 60 minutes before a phase starts
+- Proper `VTIMEZONE` with daylight saving transitions
+- Stable event UIDs, so calendar apps don't create duplicates
+- Light and dark mode, following the system or set manually
+- Six languages — including the calendar events themselves
 
 ---
 
 ## Installation
 
-1. Den kompletten Ordner per FTP in das Web-Verzeichnis hochladen
-   (`httpdocs`, `public_html`, `www` – je nach Hoster).
-2. In `lib/config.php` die Kontaktadresse eintragen:
+1. Upload the contents of this repository to your web root
+2. In `lib/config.php`, set a real contact address:
 
    ```php
-   const LH_USER_AGENT = 'lighthours/1.0 (+https://deine-domain.de; du@deine-domain.de)';
+   const LH_USER_AGENT = 'lighthours/' . LH_VERSION . ' (+https://your-domain.com; you@your-domain.com)';
    ```
 
-   Das ist keine Formalität: Nominatim, die kostenlose Ortssuche von OpenStreetMap,
-   sperrt Zugriffe ohne erreichbare Kontaktadresse.
-3. Fertig. Die Seite ist aufrufbar.
-4. `check.php` im Browser aufrufen – die Seite prüft die Installation und meldet,
-   was noch fehlt. Danach kann sie gelöscht werden.
+   This is not a formality. Nominatim, OpenStreetMap's free geocoder, rejects
+   requests with placeholder addresses using HTTP 403 — by far the most common
+   reason the search finds nothing.
 
-**Voraussetzung:** PHP 8.1 oder neuer. Erforderliche Erweiterungen (`mbstring`,
-`json`, `date`) sind überall vorhanden; für die Ortssuche wird `curl` genutzt, sonst
+3. Open `check.php` in a browser. It verifies PHP version, extensions, outgoing
+   connections, the calculation and the place search, and names the next step
+   for anything that fails. Delete it once everything passes.
+
+**Requires** PHP 8.1 or newer. The extensions it needs (`mbstring`, `json`,
+`date`) are present everywhere; place search uses `curl` or falls back to
 `allow_url_fopen`.
 
-**Optional:** Ein beschreibbares Verzeichnis `cache/` beschleunigt die Ortssuche und
-entlastet OpenStreetMap. Es wird automatisch angelegt, sofern die Rechte es
-erlauben – fehlt es, arbeitet lighthours ohne Zwischenspeicher weiter.
-
-### Lokal ausprobieren
-
-```bash
-php -S localhost:8000
-```
+**Optional:** a writable `cache/` directory speeds up repeated searches and
+takes load off OpenStreetMap. It is created automatically if permissions allow.
 
 ---
 
-## Aufbau
+## Configuration
 
-```
-index.php              Startseite und Generator
-calendar.php           Kalenderausgabe (ICS)
-check.php              Selbstprüfung nach dem Upload
-datenschutz.php        Datenschutzerklärung
-impressum.php          Impressum
-sitemap.php            Sitemap, erzeugt aus dem Sprachbestand
-robots.txt
-api/
-  times.php            Lichtzeiten als JSON
-  geocode.php          Ortssuche (Nominatim-Proxy)
-  deviation.php        Zeitabweichung im Radius
-  send.php             Kalenderlink per E-Mail (freiwillig)
-legal/
-  datenschutz-de|en    Rechtstexte (Deutsch maßgeblich)
-  impressum-de|en
-partials/
-  kopf.php             Dokumentkopf: Titel, Metaangaben, Suchmaschinen
-  footer.php           gemeinsamer Seitenfuß
-  rechtstext.php       Gerüst für die Rechtsseiten
-lib/
-  Sun.php              Sonnenstand (NOAA-Algorithmus)
-  LightPhases.php      Goldene und Blaue Stunde
-  Ics.php              iCalendar-Erzeugung mit VTIMEZONE
-  Timezone.php         Zeitzone aus Koordinaten
-  Geocoder.php         Ortssuche
-  Cache.php            Dateizwischenspeicher
-  Mailer.php           E-Mail-Versand (SMTP oder mail())
-  RateLimit.php        Missbrauchsbremse
-  I18n.php             Mehrsprachigkeit
-  config.php           Konfiguration
-lang/
-  de en it fr es       Übersetzungen
-assets/                Schriften, Bilder, CSS, JS, MapLibre
-  img/screens/         Bildschirmfotos für die Startseite (hell und dunkel)
-```
+Everything lives in `lib/config.php`.
 
-Die Module unter `lib/` kennen einander nur, wo es nötig ist, und lassen sich einzeln
-verwenden. Die Verzeichnisse `lib/`, `lang/` und `cache/` sind per `.htaccess` von
-außen gesperrt.
+| Setting | Purpose |
+|---|---|
+| `LH_USER_AGENT` | Contact address for the place search — **required** |
+| `LH_BASE_URL` | Public address, used for canonical URLs and subscription links |
+| `LH_AUTHOR` | Operator name for structured data, empty omits it |
+| `LH_SOURCE_URL` | Link to the source, empty hides the footer link |
+| `LH_COFFEE_USER` | Buy Me a Coffee username, empty hides the support section |
+| `LH_MAIL_ENABLED` | Optional email delivery of the subscription link, off by default |
+| `LH_SMTP_*` | SMTP access — usually more reliable than `mail()` on shared hosting |
+| `LH_STATS_ENABLED` | Anonymous count of active calendars |
+| `LH_STATS_MIN_DISPLAY` | Threshold below which the count stays hidden |
+| `LH_MAX_MONTHS` | Upper limit for the calendar period |
+| `LH_CACHE_DIR` | Cache directory, empty disables caching |
 
 ---
 
 ## API
 
-Alle Endpunkte antworten mit JSON und erlauben Zugriffe von fremden Domains (CORS).
-
-### Lichtzeiten
+All endpoints return JSON and allow cross-origin requests.
 
 ```
-GET api/times.php?lat=53.5511&lon=9.9937&days=3&tz=Europe/Berlin&lang=de
-```
-
-```json
-{
-  "lat": 53.5511, "lon": 9.9937, "timezone": "Europe/Berlin",
-  "days": [{
-    "date": "2026-08-01",
-    "phases": [{
-      "event": "blue_morning",
-      "label": "Blaue Stunde (Morgen)",
-      "start": "2026-08-01T04:50:58+02:00",
-      "end":   "2026-08-01T05:08:21+02:00",
-      "start_local": "04:50", "end_local": "05:08",
-      "duration_minutes": 17
-    }]
-  }]
-}
-```
-
-### Ortssuche
-
-```
-GET api/geocode.php?q=Hamburg&lang=de
-```
-
-Liefert Name, Koordinaten, Ländercode und passende Zeitzonen.
-
-`country` gewichtet mehrdeutige Eingaben: Die Postleitzahl 20095 gibt es in
-Hamburg, in Cusano Milanino und – als 20-095 – in Lublin. Ohne Angabe wird das
-Land aus dem `Accept-Language`-Header des Browsers abgeleitet.
-
-### Zeitabweichung im Radius
-
-```
+GET api/times.php?lat=53.5511&lon=9.9937&days=3&tz=Europe/Berlin&lang=en
+GET api/geocode.php?q=Hamburg&lang=en&country=DE
 GET api/deviation.php?lat=53.55&radius=100
-```
-
-### Kalender
-
-```
 GET calendar.php?lat=53.5511&lon=9.9937&months=24&rolling=1
 ```
 
-| Parameter | Werte | Vorgabe |
+### Calendar parameters
+
+| Parameter | Values | Default |
 |---|---|---|
-| `lat`, `lon` | Koordinaten | Pflicht |
-| `events` | `golden_morning`, `golden_evening`, `blue_morning`, `blue_evening` (kommagetrennt) | alle |
-| `months` | 1 – 60 | 12 |
-| `end` | eigenes Enddatum `JJJJ-MM-TT` (statt `months`) | – |
-| `rolling` | `1` = rollierend, immer ab Abrufdatum | aus |
-| `tz` | Zeitzonen-Kennung | aus Koordinaten geschätzt |
-| `lang` | `de`, `en`, `it`, `fr`, `es` | `de` |
-| `reminder` | Minuten vor Beginn | keine |
-| `name` | Anzeigename des Orts | Koordinaten |
+| `lat`, `lon` | coordinates | required |
+| `events` | `golden_morning`, `golden_evening`, `blue_morning`, `blue_evening` | all |
+| `months` | 1–60 | 12 |
+| `end` | custom end date `YYYY-MM-DD` | – |
+| `rolling` | `1` = always the coming `months` from today | off |
+| `tz` | time zone identifier | derived from coordinates |
+| `lang` | `de`, `en`, `it`, `fr`, `es`, `pt` | `de` |
+| `reminder` | minutes before start | none |
+| `name` | display name of the place | coordinates |
 
-Für ein Abo `rolling=1` verwenden: Der Kalender wandert dann mit und ist nie leer.
-
----
-
-## Genauigkeit
-
-Der Sonnenstand wird nach dem NOAA-Verfahren berechnet, inklusive atmosphärischer
-Refraktion – gerechnet wird also mit der *scheinbaren* Sonnenhöhe, so wie die Sonne
-tatsächlich am Himmel steht. Nahe am Horizont macht das rund zwei Minuten aus.
-
-Phasengrenzen:
-
-| Phase | Sonnenhöhe |
-|---|---|
-| Goldene Stunde | −4° bis +6° |
-| Blaue Stunde | −6° bis −4° |
-
-Gegen eine unabhängige Referenzimplementierung (Python/Astral) geprüft: über ein
-volles Jahr an sechs Orten von Reykjavík bis Sydney beträgt die mittlere Abweichung
-**0,9 Sekunden**, die größte 3 Sekunden. In Polarnähe kann die Sonne eine Grenze
-streifen statt sie zu kreuzen – dort ist der Zeitpunkt naturgemäß unscharf, die
-Phase erstreckt sich dann ohnehin über Stunden.
-
-An Tagen ohne die jeweilige Phase (Polartag, Polarnacht) entfällt der Termin
-ersatzlos, statt eine falsche Zeit zu erfinden.
+Use `rolling=1` for subscriptions — the calendar then moves with the date and
+never runs empty.
 
 ---
 
-## Datenschutz
+## Privacy
 
-- Keine Cookies, keine Sitzungen, kein Tracking, keine Zugriffsprotokolle.
-- Gespeichert wird einzig die Wahl des Farbmodus – im `localStorage` des Browsers,
-  und auch nur, wenn jemand den Umschalter benutzt. Nichts davon erreicht den Server.
-- Die Schrift liegt lokal (`assets/fonts/`) – **kein Aufruf an Google Fonts**.
-- MapLibre liegt lokal (`assets/vendor/`) – kein CDN.
-- Die Ortssuche läuft serverseitig: Suchbegriffe erreichen OpenStreetMap ohne die
-  IP-Adresse des Besuchers.
-- Einzige Ausnahme: Die **Kartenkacheln** lädt der Browser direkt von
-  `tile.openstreetmap.org`, sobald ein Ort gewählt wurde. Vorher wird die Karte gar
-  nicht geladen. Wer auch das vermeiden will, hinterlegt in `assets/js/app.js` eine
-  eigene Kachelquelle.
+- No cookies, no accounts, no tracking, no ads
+- Fonts and the map library are self-hosted — **nothing loads from Google or a
+  CDN**
+- Place search runs server-side, so search terms reach OpenStreetMap without
+  the visitor's IP address
+- Map tiles are loaded by the browser directly from openstreetmap.org, and only
+  after a place has been selected
+- Active calendars are counted anonymously via a hash of the calendar settings,
+  without IP address and without a timestamp
 
----
-
-## E-Mail-Versand
-
-Ausgeschaltet, solange `LH_MAIL_ENABLED` in `lib/config.php` auf `false` steht.
-Eingeschaltet erscheint im letzten Schritt ein Feld, über das sich der Abo-Link
-verschicken lässt – freiwillig, nie Voraussetzung für den Kalender.
-
-Es wird **nichts gespeichert**: keine Adresse, keine Liste, kein Protokoll. Die
-Nachricht geht raus, danach ist die Adresse vergessen.
-
-Gegen Missbrauch: höchstens `LH_MAIL_MAX_PER_HOUR` Nachrichten je Stunde und
-Besucher, ein für Menschen unsichtbares Feld gegen Skripte, und der Kalenderlink
-muss auf die eigene Installation zeigen – sonst wäre das Formular ein offener
-Versandapparat.
-
-Auf günstigem Webspace ist `mail()` oft gesperrt oder landet im Spam. Dann in
-`lib/config.php` einen SMTP-Zugang eintragen (`LH_SMTP_HOST` und folgende); der
-eingebaute SMTP-Client kommt ohne zusätzliche Bibliothek aus.
+The only thing stored client-side is the chosen colour mode, in `localStorage`.
 
 ---
 
-## Unterstützung
+## Architecture
 
-In `lib/config.php` steht `LH_COFFEE_USER`. Ist dort ein Buy-me-a-coffee-Benutzername
-hinterlegt, erscheinen ein eigener Abschnitt am Seitenende und ein Link in der
-Fußzeile – beides in den Projektfarben. Leerer Wert blendet beides aus.
+```
+index.php              Home page and generator
+calendar.php           Calendar output (ICS)
+check.php              Post-upload self-check
+datenschutz.php        Privacy statement
+impressum.php          Legal notice (German requirement)
+sitemap.php            Sitemap, generated from the available languages
+robots.php             robots.txt, generated from the configuration
+api/                   times, geocode, deviation, send
+lib/
+  Sun.php              Sun position (NOAA algorithm)
+  LightPhases.php      Golden and blue hour
+  Ics.php              iCalendar output with VTIMEZONE
+  Timezone.php         Time zone from coordinates
+  Geocoder.php         Place search
+  Stats.php            Anonymous count
+  Mailer.php           SMTP client without dependencies
+  RateLimit.php        Abuse throttle
+  Cache.php            File cache
+  I18n.php             Translations
+  config.php           Configuration
+lang/                  de en it fr es pt
+legal/                 Privacy and legal notice text (de, en)
+partials/              Shared head, footer and legal page scaffold
+assets/                Fonts, images, CSS, JS, MapLibre
+tests/run.php          93 tests, no framework
+```
 
-Bewusst als eigener Link statt als offizielles BMC-Widget: Dessen Skript kommt von
-einem fremden CDN und würde den Datenschutzabschnitt oben hinfällig machen.
+Modules under `lib/` know about each other only where necessary and can be used
+individually.
 
 ---
 
-## Mehrsprachigkeit
+## Adding a language
 
-Neue Sprache: `lang/de.php` kopieren, Werte übersetzen, als `lang/<code>.php`
-speichern. Die Sprache erscheint automatisch in der Umschaltung – am Code ist nichts
-zu ändern. Kalendertermine, Beschreibungen und Oberfläche folgen derselben Datei.
+Copy `lang/en.php`, translate the values, save it as `lang/<code>.php`. The
+language appears in the switcher automatically — no code changes. The test suite
+verifies that every language carries the same set of keys and that placeholders
+like `{minutes}` survived translation.
+
+---
+
+## Tests
+
+```bash
+php tests/run.php
+```
+
+93 checks covering the astronomy against reference values, ICS structure and
+line folding, time zone resolution, translation completeness, design tokens and
+the search-engine basics. No framework, no dependencies.
 
 ---
 
 ## Design
 
-Bildmarke sind drei gestapelte Balken von Gold nach Blau – der Horizont als
-Lichtbänder. Schrift ist Outfit, eine geometrische Grotesk, lokal eingebunden
-(45 KB). Farben, Größen, Abstände und die Regeln zur Marke stehen in
-[DESIGN.md](DESIGN.md), sämtliche Werte in `assets/css/tokens.css`.
+Colours, sizes, spacing and the rules for the logo are documented in
+[DESIGN.md](DESIGN.md) *(in German)*. Every value lives in
+`assets/css/tokens.css`.
 
-Hell- und Dunkelmodus folgen der Systemeinstellung; ein Umschalter in der Kopfzeile
-erlaubt System, Hell oder Dunkel.
-
-Zum Anschauen ohne Server: `lighthours-designvorschau.html` im Browser öffnen.
+The mark is three stacked bars running from gold to blue — the horizon as bands
+of light. The typeface is Outfit, variable and self-hosted at 45 KB total.
 
 ---
 
-## Nächste Schritte
+## Licence
 
-- Sonnenauf- und -untergang, nautische und astronomische Dämmerung
-- Mondphasen, Mondauf- und -untergang
-- Freiwilliger E-Mail-Versand des Abo-Links
-- Bewölkungsvorhersage
+MIT — see [LICENSE](LICENSE). Use it, change it, redistribute it, sell it.
 
----
+**The name "lighthours" and the logo are not covered by that licence.** Forks
+and self-hosted instances are welcome, but please use your own name and mark —
+see [NOTICE.md](NOTICE.md). Running an unmodified instance and noting that it is
+based on lighthours is explicitly fine.
 
-## Vor dem Onlinestellen
-
-Sobald der Quellcode veröffentlicht ist, `LH_SOURCE_URL` in `lib/config.php`
-setzen – dann erscheint der Verweis „Quellcode" in der Fußzeile. Solange der
-Wert leer ist, bleibt der Verweis ausgeblendet, statt ins Leere zu zeigen.
-
-Die Datenschutzerklärung beschreibt exakt, was die Anwendung tut. Wer den Code
-ändert – etwa den E-Mail-Versand einschaltet oder die Zählung abschaltet –
-sollte `legal/datenschutz-*.php` entsprechend anpassen.
-
----
-
-## Änderungen
-
-Siehe [CHANGELOG.md](CHANGELOG.md).
-
----
-
-## Lizenz
-
-MIT – siehe [LICENSE](LICENSE). Verwenden, ändern, weitergeben, auch
-kommerziell einsetzen: alles erlaubt.
-
-**Nicht Teil der Lizenz sind der Name „lighthours" und die Bildmarke.** Forks
-und eigene Instanzen sind ausdrücklich willkommen, aber bitte unter eigenem
-Namen – siehe [NOTICE.md](NOTICE.md). Eine unveränderte Instanz zu betreiben und
-dabei auf lighthours zu verweisen, ist selbstverständlich in Ordnung.
-
-Schrift: Outfit steht unter der SIL Open Font License 1.1.
-MapLibre GL JS steht unter der 3-Clause-BSD-Lizenz.
-Ortsdaten: © OpenStreetMap-Mitwirkende, ODbL.
+Fonts: Outfit under the SIL Open Font License 1.1.
+MapLibre GL JS under the 3-Clause BSD License.
+Place data © OpenStreetMap contributors, ODbL.

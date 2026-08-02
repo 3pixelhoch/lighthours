@@ -364,7 +364,15 @@ require __DIR__ . '/partials/kopf.php';
     <div class="wrap">
       <div class="grid-3">
         <div class="tile"><h3><?= e('free.title') ?></h3><p><?= e('free.text') ?></p></div>
-        <div class="tile"><h3><?= e('os.title') ?></h3><p><?= e('os.text') ?></p></div>
+        <div class="tile">
+          <h3><?= e('os.title') ?></h3>
+          <p><?= e('os.text') ?></p>
+<?php if (LH_SOURCE_URL !== ''): ?>
+          <p class="tile-link">
+            <a href="<?= LightHours\h(LH_SOURCE_URL) ?>" rel="noopener"><?= e('os.link') ?> →</a>
+          </p>
+<?php endif; ?>
+        </div>
         <div class="tile"><h3><?= e('privacy.title') ?></h3><p><?= e('privacy.text') ?></p></div>
       </div>
     </div>

@@ -223,4 +223,5 @@ return [
     'meta.privacy_desc' => 'Ce que lighthours conserve et ce qu\'il ne conserve pas : aucun cookie, aucun compte, aucune régie publicitaire. Politique complète.',
     'meta.imprint_desc' => 'Mentions légales et contact de lighthours, l\'agenda libre pour l\'heure dorée et l\'heure bleue.',
     'meta.check_desc' => 'Vérification de l\'installation.',
+    'os.link' => 'Code source sur GitHub',
 ];

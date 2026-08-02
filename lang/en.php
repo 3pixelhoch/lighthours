@@ -217,4 +217,5 @@ return [
     'meta.privacy_desc' => 'What lighthours stores and what it does not: no cookies, no accounts, no advertising networks. Full privacy statement.',
     'meta.imprint_desc' => 'Provider identification and contact for lighthours, the open source calendar for golden and blue hour.',
     'meta.check_desc' => 'Self-check of the installation.',
+    'os.link' => 'Source code on GitHub',
 ];

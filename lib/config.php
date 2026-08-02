@@ -35,7 +35,7 @@ const LH_AUTHOR = '';
  * Adresse des Quellcodes, erscheint als Verweis in der Fußzeile.
  * Leer lassen blendet den Verweis aus – etwa vor der Veröffentlichung.
  */
-const LH_SOURCE_URL = '';
+const LH_SOURCE_URL = 'https://github.com/3pixelhoch/lighthours';
 
 /** Endpunkt der Ortssuche. Bei eigener Nominatim-Instanz hier umstellen. */
 const LH_NOMINATIM_URL = 'https://nominatim.openstreetmap.org';

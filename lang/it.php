@@ -222,4 +222,5 @@ return [
     'meta.privacy_desc' => 'Cosa lighthours salva e cosa no: niente cookie, niente account, niente reti pubblicitarie. Informativa completa.',
     'meta.imprint_desc' => 'Dati dell\'editore e contatti di lighthours, il calendario open source per l\'ora d\'oro e l\'ora blu.',
     'meta.check_desc' => 'Verifica dell\'installazione.',
+    'os.link' => 'Codice sorgente su GitHub',
 ];
