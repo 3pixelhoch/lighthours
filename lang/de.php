@@ -189,7 +189,7 @@ return [
     'check.not_ok' => 'Es fehlt noch etwas.',
     'check.not_ok_text' => 'Die Hinweise oben nennen jeweils den nächsten Schritt. Nach einer Änderung einfach diese Seite neu laden.',
     'check.manual' => 'Noch von Hand zu prüfen',
-    'check.manual_text' => 'Ruf lib/config.php auf. Es muss ein Fehler 404 erscheinen. Wird stattdessen die Datei angezeigt oder heruntergeladen, wertet dein Hoster die .htaccess nicht aus – dann die Verzeichnisse lib, lang, data, partials und cache über das Hosting-Panel sperren.',
+    'check.manual_text' => 'Ruf lib/config.php auf. Es muss ein Fehler 403 erscheinen. Wird stattdessen die Datei angezeigt oder heruntergeladen, wertet dein Hoster die .htaccess nicht aus – dann die Verzeichnisse lib, lang, data, partials und cache über das Hosting-Panel sperren.',
     'check.to_home' => 'Zur Startseite',
     'gen.size_hint' => 'Sehr lange Zeiträume erzeugen große Dateien – fünf Jahre mit allen Terminarten sind rund 3 MB. Manche Kalender-Apps laden das spürbar langsam. Zwei Jahre als rollierendes Abo sind meist die bessere Wahl.',
 

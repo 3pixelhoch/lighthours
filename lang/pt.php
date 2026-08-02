@@ -191,7 +191,7 @@ return [
     'check.not_ok'  => 'Ainda falta alguma coisa.',
     'check.not_ok_text' => 'Cada aviso acima indica o próximo passo. Depois de mudar algo, é só recarregar esta página.',
     'check.manual'  => 'Ainda para conferir na mão',
-    'check.manual_text' => 'Abra lib/config.php. Precisa aparecer um erro 404. Se em vez disso o arquivo for mostrado ou baixado, a sua hospedagem não avalia o .htaccess – então bloqueie as pastas lib, lang, partials e cache pelo painel de hospedagem.',
+    'check.manual_text' => 'Abra lib/config.php. Precisa aparecer um erro 403. Se em vez disso o arquivo for mostrado ou baixado, a sua hospedagem não avalia o .htaccess – então bloqueie as pastas lib, lang, partials e cache pelo painel de hospedagem.',
     'check.to_home' => 'Ir para a página inicial',
 
     // Capturas de tela

@@ -191,7 +191,7 @@ return [
     'check.not_ok' => 'Il manque encore quelque chose.',
     'check.not_ok_text' => 'Chaque note ci-dessus indique l\'étape suivante. Après une modification, rechargez simplement cette page.',
     'check.manual' => 'À vérifier à la main',
-    'check.manual_text' => 'Ouvrez lib/config.php. Une erreur 404 doit apparaître. Si le fichier s\'affiche ou se télécharge, votre hébergeur n\'exploite pas .htaccess – bloquez alors les dossiers lib, lang, data, partials et cache depuis le panneau d\'hébergement.',
+    'check.manual_text' => 'Ouvrez lib/config.php. Une erreur 403 doit apparaître. Si le fichier s\'affiche ou se télécharge, votre hébergeur n\'exploite pas .htaccess – bloquez alors les dossiers lib, lang, data, partials et cache depuis le panneau d\'hébergement.',
     'check.to_home' => 'Aller à la page d\'accueil',
     'gen.size_hint' => 'Les périodes très longues produisent de gros fichiers : cinq ans avec tous les types d\'événements font environ 3 Mo. Certaines applications d\'agenda les chargent lentement. Deux ans en abonnement glissant est souvent le meilleur choix.',
 

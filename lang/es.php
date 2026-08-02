@@ -190,7 +190,7 @@ return [
     'check.not_ok' => 'Todavía falta algo.',
     'check.not_ok_text' => 'Cada aviso de arriba indica el siguiente paso. Tras un cambio, recarga esta página.',
     'check.manual' => 'Aún por comprobar a mano',
-    'check.manual_text' => 'Abre lib/config.php. Debe aparecer un error 404. Si en su lugar se muestra o descarga el archivo, tu proveedor no evalúa .htaccess: bloquea entonces las carpetas lib, lang, data, partials y cache desde el panel de hosting.',
+    'check.manual_text' => 'Abre lib/config.php. Debe aparecer un error 403. Si en su lugar se muestra o descarga el archivo, tu proveedor no evalúa .htaccess: bloquea entonces las carpetas lib, lang, data, partials y cache desde el panel de hosting.',
     'check.to_home' => 'Ir a la página de inicio',
     'gen.size_hint' => 'Los periodos muy largos generan archivos grandes: cinco años con todos los tipos de evento son unos 3 MB. Algunas aplicaciones de calendario los cargan con lentitud. Dos años como suscripción continua suele ser la mejor opción.',
 

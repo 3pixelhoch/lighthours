@@ -1,7 +1,19 @@
 # lighthours – Apache-Konfiguration für klassisches Webhosting
 
 # --- Verzeichnisse schützen, die nie direkt aufgerufen werden sollen -------
-RedirectMatch 404 ^/(lib|lang|cache|partials|legal|tests)/
+#
+# Zwei Wege, weil nicht jeder Hoster beide Module lädt. RedirectMatch stammt
+# aus mod_alias, die Regel darunter aus mod_rewrite. Fehlt eines, greift das
+# andere; sind beide da, schadet die Doppelung nicht.
+
+<IfModule mod_alias.c>
+  RedirectMatch 403 ^/(lib|lang|cache|partials|legal|tests)/
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(lib|lang|cache|partials|legal|tests)/ - [F,L]
+</IfModule>
 
 <IfModule mod_authz_core.c>
   <FilesMatch "\.(php)$">

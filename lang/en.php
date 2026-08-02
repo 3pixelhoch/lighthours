@@ -185,7 +185,7 @@ return [
     'check.not_ok' => 'Something is still missing.',
     'check.not_ok_text' => 'Each note above names the next step. After a change, simply reload this page.',
     'check.manual' => 'Still to check by hand',
-    'check.manual_text' => 'Open lib/config.php. It must return a 404 error. If the file is shown or downloaded instead, your host does not evaluate .htaccess – then block the directories lib, lang, data, partials and cache through your hosting panel.',
+    'check.manual_text' => 'Open lib/config.php. It must return a 403 error. If the file is shown or downloaded instead, your host does not evaluate .htaccess – then block the directories lib, lang, data, partials and cache through your hosting panel.',
     'check.to_home' => 'Go to the home page',
     'gen.size_hint' => 'Very long periods produce large files – five years with every event type is around 3 MB. Some calendar apps load that noticeably slowly. Two years as a rolling subscription is usually the better choice.',
 

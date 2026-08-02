@@ -104,7 +104,9 @@ pruefe(
 
 if ($uaOk) {
     try {
-        $treffer = Geocoder::search('20095', $lang, 3);
+        // Mit Länderbezug abfragen, sonst steht als erster Treffer die
+        // italienische Postleitzahl 20095 – technisch richtig, aber verwirrend.
+        $treffer = Geocoder::search('20095', $lang, 3, LightHours\preferred_country() ?: 'DE');
         pruefe(
             $i18n->t('check.geo'),
             $treffer !== [],
