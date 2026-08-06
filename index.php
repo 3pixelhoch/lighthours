@@ -70,6 +70,8 @@ require __DIR__ . '/partials/kopf.php';
           <p><?= e('why.short_t') ?></p>
         </div>
       </div>
+
+      <?php require __DIR__ . '/partials/lichtdiagramm.php'; ?>
     </div>
   </section>
 

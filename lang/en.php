@@ -13,7 +13,21 @@ return [
     'event.blue_evening'   => 'Blue Hour (Evening)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Golden and blue hour times for {name}. Created with lighthours.',
-    'cal.event_description'=> "{event} in {name}\nStarts: {start}\nEnds: {end}\n\nCreated with lighthours – light planning for photography and film.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Why the golden hour only ends after sunset',
+    'chart.svg_title' => 'Sun altitude over the course of an evening',
+    'chart.svg_desc' => 'The sun descends from six degrees above the horizon down to minus six degrees. The band below shows the phases: the golden hour runs from plus six to minus four degrees and therefore continues past sunset. Only then does the blue hour follow.',
+    'chart.horizon' => 'Horizon',
+    'chart.sunset' => 'Sunset',
+    'chart.legend_golden' => 'Golden hour, +6° to −4°',
+    'chart.legend_after' => 'of which after sunset',
+    'chart.legend_blue' => 'Blue hour, −4° to −6°',
+    'chart.text_1' => 'The phases are defined by the position of the sun, not by whether you can see it. Its light does not stop at sunset: it keeps lighting the atmosphere from below, and that light reaches the ground scattered. It is warm, very soft and casts no shadows. That is why the more strongly coloured part still counts as golden hour. Only at −4° does the afterglow lose its strength, the sky itself becomes the light source, and the blue hour begins.',
+    'chart.text_2' => 'For planning that means: until sunset the light comes from the side and models – that is the time for people and landscapes. Afterwards a warm sky remains for silhouettes and city shots, but nothing left to light a face with. Every event in the calendar therefore states sunset as well, so you know where you are within that span.',
+    'cal.event_description'=> "{event} in {name}\nStarts: {start}\nEnds: {end}\n{sun}\n\nCreated with lighthours – light planning for photography and film.",
+    'cal.sunrise'=> "Sunrise: {time}",
+    'cal.sunset'=> "Sunset: {time}",
 
     // Head
     'meta.title'       => 'lighthours – Golden & Blue Hour as a Calendar Subscription',

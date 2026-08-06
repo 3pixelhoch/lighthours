@@ -88,6 +88,7 @@ Two details that most implementations get wrong:
 - Optional reminder 15, 30 or 60 minutes before a phase starts
 - Proper `VTIMEZONE` with daylight saving transitions
 - Stable event UIDs, so calendar apps don't create duplicates
+- Every event names sunrise or sunset, so the times have a reference point
 - Light and dark mode, following the system or set manually
 - Six languages — including the calendar events themselves
 
@@ -212,7 +213,7 @@ lang/                  de en it fr es pt
 legal/                 Privacy and legal notice text (de, en)
 partials/              Shared head, footer and legal page scaffold
 assets/                Fonts, images, CSS, JS, MapLibre
-tests/run.php          119 tests, no framework
+tests/run.php          138 tests, no framework
 ```
 
 Modules under `lib/` know about each other only where necessary and can be used
@@ -235,7 +236,7 @@ like `{minutes}` survived translation.
 php tests/run.php
 ```
 
-119 checks covering the astronomy against reference values, ICS structure and
+138 checks covering the astronomy against reference values, ICS structure and
 line folding, time zone resolution, translation completeness, design tokens and
 the search-engine basics. No framework, no dependencies.
 

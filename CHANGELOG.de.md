@@ -20,6 +20,8 @@ Composer, keine Abhängigkeiten.
 - Optionale Erinnerung 15, 30 oder 60 Minuten vor Beginn
 - Echte Zeitzonenangabe samt Sommerzeitwechseln (VTIMEZONE)
 - Stabile Termin-Kennungen, sodass Kalender-Apps keine Dubletten anlegen
+- Jeder Termin nennt den Sonnenauf- beziehungsweise -untergang als Bezugspunkt:
+  Die Goldene Stunde endet abends erst rund 25 Minuten nach dem Untergang
 
 ### Berechnung
 
@@ -64,7 +66,7 @@ Composer, keine Abhängigkeiten.
   die häufigste Stolperfalle beim ersten Aufsetzen
 - Freiwilliger E-Mail-Versand des Abo-Links über SMTP oder `mail()`,
   ab Werk ausgeschaltet, mit Missbrauchsbremse
-- 119 Tests ohne Framework: `php tests/run.php`
+- 138 Tests ohne Framework: `php tests/run.php`
 
 ### Suchmaschinen
 

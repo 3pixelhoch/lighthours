@@ -24,6 +24,19 @@ final class LightPhases
     ];
 
     /**
+     * Geometrische Sonnenhöhe für Auf- und Untergang.
+     *
+     * -0,833 Grad ist die übliche Festlegung: Der Sonnenrand berührt den
+     * Horizont, nicht der Mittelpunkt. Enthält den scheinbaren Radius der
+     * Sonnenscheibe und die mittlere Refraktion von 34 Bogenminuten.
+     *
+     * Deshalb wird hier ohne Refraktion gerechnet: Sie steckt in den -0,833
+     * Grad bereits drin. Wer sie zusätzlich anwendet, liegt zweieinhalb
+     * Minuten daneben - und das fällt beim Vergleich mit jeder Wetter-App auf.
+     */
+    private const HORIZONT_GRAD = -0.833;
+
+    /**
      * Lichtphasen eines Kalendertages am Ort.
      *
      * Wichtig: Bezugspunkt ist der *örtliche* Mittag, nicht 12:00 UTC – sonst
@@ -65,7 +78,20 @@ final class LightPhases
                 continue;
             }
 
-            $result[] = ['event' => $event, 'start' => $start, 'end' => $end];
+            // Auf- beziehungsweise Untergang als Bezugspunkt mitgeben.
+            // Die Goldene Stunde endet abends bei -4 Grad, also gut 25 Minuten
+            // nach Sonnenuntergang. Ohne diese Angabe wirkt der Termin falsch:
+            // Man steht draußen, es ist längst dämmrig, und der Kalender sagt
+            // "Goldene Stunde".
+            $horizont = Sun::timeAtAltitude(self::HORIZONT_GRAD, $rising, $noon, $lat, $lon, false);
+
+            $result[] = [
+                'event'   => $event,
+                'start'   => $start,
+                'end'     => $end,
+                'horizon' => $horizont,
+                'rising'  => $rising,
+            ];
         }
 
         usort($result, static fn(array $a, array $b): int => $a['start'] <=> $b['start']);

@@ -73,11 +73,25 @@ final class Ics
             $lines[] = 'LOCATION:' . self::esc($name);
             $lines[] = 'GEO:' . sprintf('%.6f;%.6f', $lat, $lon);
             $lines[] = 'TRANSP:TRANSPARENT';
+            // Sonnenauf- oder -untergang als Bezugspunkt. Die Goldene Stunde
+            // endet abends erst 25 Minuten nach dem Untergang – ohne diese
+            // Zeile wirkt der Termin schlicht falsch.
+            $bezug = '';
+            if (isset($phase['horizon']) && $phase['horizon'] !== null) {
+                $zeit = (new \DateTimeImmutable('@' . $phase['horizon']))
+                    ->setTimezone($tz)->format('H:i');
+                $bezug = $i18n->t(
+                    ($phase['rising'] ?? false) ? 'cal.sunrise' : 'cal.sunset',
+                    ['time' => $zeit]
+                );
+            }
+
             $lines[] = 'DESCRIPTION:' . self::esc($i18n->t('cal.event_description', [
                 'event' => $title,
                 'name'  => $name,
                 'start' => $start->format('H:i'),
                 'end'   => $end->format('H:i'),
+                'sun'   => $bezug,
             ]));
 
             if ($reminderMinutes !== null && $reminderMinutes > 0) {

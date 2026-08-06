@@ -627,3 +627,71 @@ select {
 .tile-link { margin-top: var(--sp-3) !important; font-size: var(--text-sm); font-weight: 600; }
 .tile-link a { color: var(--accent-text); text-decoration: none; }
 .tile-link a:hover { text-decoration: underline; }
+
+/* ---------- Lichtdiagramm ------------------------------------------------ */
+
+/* Die Grafik erklärt den einzigen Punkt, an dem die Kalendertermine regelmäßig
+   für Verwirrung sorgen: Die Goldene Stunde endet erst gut 25 Minuten nach
+   Sonnenuntergang. Ohne Uhrzeiten, weil die Dauer von Breitengrad und
+   Jahreszeit abhängt.
+
+   Als Karte gebaut wie die Schritte im Generator. Frei auf der Seite stehend
+   wirkte der Block angeklebt: schmale Grafik links, darunter eine lange
+   Textspalte, während darüber ein Dreierraster liegt. */
+
+.phase-chart {
+  margin: var(--sp-7) 0 0;
+  padding: var(--sp-7) var(--sp-6);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.phase-chart h3 {
+  font-size: var(--text-xl);
+  text-align: center;
+  max-width: 34ch;
+  margin: 0 auto var(--sp-6);
+  text-wrap: balance;
+}
+
+.phase-chart svg {
+  display: block;
+  width: 100%;
+  max-width: 46rem;
+  height: auto;
+  margin: 0 auto var(--sp-7);
+}
+
+.pc-ax {
+  font-family: var(--font);
+  font-size: 14px;
+  fill: var(--fg-muted);
+}
+.pc-mark {
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--fg);
+}
+
+/* Zwei Spalten, damit der Text das Dreierraster darüber aufnimmt statt als
+   Block zu stehen. Unter 560 px klappt es von selbst untereinander. */
+.phase-chart-text {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  max-width: none;
+  color: var(--fg-muted);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+.phase-chart-text p { margin: 0; max-width: none; }
+
+@media (max-width: 640px) {
+  .phase-chart { padding: var(--sp-6) var(--sp-4); }
+  .phase-chart h3 { font-size: var(--text-lg); }
+  .pc-ax   { font-size: 17px; }
+  .pc-mark { font-size: 18px; }
+}

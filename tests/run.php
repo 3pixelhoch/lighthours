@@ -182,6 +182,66 @@ check('JSON gibt kurze Fließkommazahlen aus',
     json_encode(['lat' => 53.5511]) === '{"lat":53.5511}',
     json_encode(['lat' => 53.5511]));
 
+echo "\nSonnenauf- und -untergang\n";
+
+// Der Bezugspunkt im Termin. Die Goldene Stunde endet abends 25 Minuten nach
+// Sonnenuntergang; ohne diese Angabe wirkt der Eintrag falsch.
+//
+// -0,833 Grad ist eine GEOMETRISCHE Angabe, die Refraktion steckt bereits
+// darin. Wird zusätzlich die Refraktion angewandt, liegt das Ergebnis
+// zweieinhalb Minuten daneben. Genau dieser Fehler war schon einmal drin.
+$bremenTz = new DateTimeZone('Europe/Berlin');
+$bremen   = LightPhases::forDay(new DateTimeImmutable('2026-08-04'), 53.059482, 8.8145992, null, $bremenTz);
+
+$untergang = null;
+$aufgang   = null;
+foreach ($bremen as $p) {
+    if ($p['event'] === 'golden_evening') { $untergang = $p['horizon']; }
+    if ($p['event'] === 'golden_morning') { $aufgang   = $p['horizon']; }
+}
+
+// Unabhängig gerechnet (Python/Astral): 2026-08-04, Bremen 28201
+$sollUnter = (new DateTimeImmutable('2026-08-04 21:13:19', $bremenTz))->getTimestamp();
+$sollAuf   = (new DateTimeImmutable('2026-08-04 05:47:17', $bremenTz))->getTimestamp();
+
+check('Sonnenuntergang Bremen trifft die Referenz',
+    $untergang !== null && abs($untergang - $sollUnter) <= 60,
+    $untergang === null ? 'kein Wert' : (new DateTimeImmutable('@' . $untergang))
+        ->setTimezone($bremenTz)->format('H:i:s') . ' statt 21:13:19');
+
+check('Sonnenaufgang Bremen trifft die Referenz',
+    $aufgang !== null && abs($aufgang - $sollAuf) <= 60,
+    $aufgang === null ? 'kein Wert' : (new DateTimeImmutable('@' . $aufgang))
+        ->setTimezone($bremenTz)->format('H:i:s') . ' statt 05:47:17');
+
+check('Untergang liegt vor dem Ende der Goldenen Stunde',
+    $untergang !== null && $untergang < $bremen[count($bremen) - 1]['end'],
+    'sonst stimmt die Zuordnung nicht');
+
+check('jede Phase trägt einen Bezugspunkt',
+    array_filter($bremen, static fn(array $p): bool => !array_key_exists('horizon', $p)) === []);
+
+check('Morgenphasen zeigen auf den Aufgang, Abendphasen auf den Untergang',
+    (static function () use ($bremen): bool {
+        foreach ($bremen as $p) {
+            $morgens = str_contains($p['event'], '_morning');
+            if (($p['rising'] ?? null) !== $morgens) { return false; }
+        }
+        return true;
+    })());
+
+// Alle sechs Sprachen müssen den Bezugspunkt benennen können
+foreach (I18n::available() as $l) {
+    $t = new I18n($l);
+    check("Bezugspunkt übersetzt: {$l}",
+        str_contains($t->t('cal.sunset', ['time' => '21:13']), '21:13')
+        && str_contains($t->t('cal.sunrise', ['time' => '05:44']), '05:44')
+        && str_contains($t->t('cal.event_description', [
+            'event' => 'X', 'name' => 'Y', 'start' => '1', 'end' => '2', 'sun' => 'ZZTOP',
+        ]), 'ZZTOP'),
+        'Platzhalter {time} oder {sun} fehlt');
+}
+
 echo "\nKalenderdatei\n";
 
 $i18n = new I18n('de');
@@ -534,6 +594,30 @@ check('Marke führt zur Startseite',
     'sonst zeigt das Logo auf die Seite, auf der man schon steht');
 check('Marke benutzt nicht die Sprachadresse',
     !preg_match('/class="brand" href="[^"]*sprachAdresse/', $kopfzeile));
+
+// Das Diagramm stand zuerst nur auf Deutsch in der Seite. Beim Übersetzen ist
+// dreimal ein Backslash aus dem Python-Skript im PHP gelandet, und der Rest der
+// Datei blieb dabei syntaktisch gültig - nur die Ausgabe war kaputt.
+$diagramm = (string) file_get_contents(__DIR__ . '/../partials/lichtdiagramm.php');
+$dMarkup  = substr($diagramm, (int) strpos($diagramm, '?>'));
+
+check('Diagramm enthält keinen fest verdrahteten Text',
+    !preg_match('~>(Goldene Stunde|Blaue Stunde|Sonnenuntergang|Horizont)<~', $dMarkup),
+    'gehört in die Sprachdateien');
+check('Diagramm hat keine entwichenen Variablen',
+    !str_contains($diagramm, '\\$i18n'),
+    'ein Backslash vor $i18n gibt den Namen als Text aus');
+
+foreach (I18n::available() as $l) {
+    $t = new I18n($l);
+    $fehlt = [];
+    foreach (['heading', 'svg_title', 'svg_desc', 'horizon', 'sunset',
+              'legend_golden', 'legend_after', 'legend_blue', 'text_1', 'text_2'] as $k) {
+        $wert = $t->t('chart.' . $k);
+        if ($wert === '' || $wert === 'chart.' . $k) { $fehlt[] = $k; }
+    }
+    check("Diagrammtexte vollständig: {$l}", $fehlt === [], implode(', ', $fehlt));
+}
 
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,

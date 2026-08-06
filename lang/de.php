@@ -17,7 +17,21 @@ return [
     'event.blue_evening'   => 'Blaue Stunde (Abend)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Goldene und Blaue Stunde für {name}. Erstellt mit lighthours.',
-    'cal.event_description'=> "{event} in {name}\nBeginn: {start} Uhr\nEnde: {end} Uhr\n\nErstellt mit lighthours – Lichtplanung für Fotografie und Film.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Warum die Goldene Stunde erst nach dem Sonnenuntergang endet',
+    'chart.svg_title' => 'Sonnenhöhe im Verlauf eines Abends',
+    'chart.svg_desc' => 'Die Sonne sinkt von plus sechs Grad über den Horizont bis auf minus sechs Grad. Das Band darunter zeigt die Phasen: Die Goldene Stunde reicht von plus sechs bis minus vier Grad und läuft damit über den Sonnenuntergang hinaus weiter. Erst danach folgt die Blaue Stunde.',
+    'chart.horizon' => 'Horizont',
+    'chart.sunset' => 'Sonnenuntergang',
+    'chart.legend_golden' => 'Goldene Stunde, +6° bis −4°',
+    'chart.legend_after' => 'davon nach Sonnenuntergang',
+    'chart.legend_blue' => 'Blaue Stunde, −4° bis −6°',
+    'chart.text_1' => 'Die Phasen sind über den Sonnenstand festgelegt, nicht darüber, ob die Sonne zu sehen ist. Mit dem Untergang hört ihr Licht nicht auf: Sie beleuchtet die Atmosphäre weiter von unten, und dieses Licht kommt gestreut am Boden an. Es ist warm, sehr weich und wirft keine Schatten mehr. Deshalb zählt der kräftiger gefärbte Bereich noch zur Goldenen Stunde. Erst bei −4° verliert das Nachglühen seine Kraft, der Himmel selbst wird zur Lichtquelle, und die Blaue Stunde beginnt.',
+    'chart.text_2' => 'Für die Planung heißt das: Bis zum Untergang kommt das Licht von der Seite und modelliert – das ist die Zeit für Menschen und Landschaft. Danach bleibt ein warmer Himmel für Silhouetten und Stadtaufnahmen, aber nichts mehr, womit sich ein Gesicht ausleuchten ließe. Jeder Termin im Kalender nennt deshalb den Sonnenuntergang mit, damit man weiß, wo man in dieser Spanne steht.',
+    'cal.event_description'=> "{event} in {name}\nBeginn: {start} Uhr\nEnde: {end} Uhr\n{sun}\n\nErstellt mit lighthours – Lichtplanung für Fotografie und Film.",
+    'cal.sunrise'=> "Sonnenaufgang: {time} Uhr",
+    'cal.sunset'=> "Sonnenuntergang: {time} Uhr",
 
     // Seitenkopf
     'meta.title'       => 'lighthours – Goldene & Blaue Stunde als Kalender-Abo',

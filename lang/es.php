@@ -16,7 +16,21 @@ return [
     'event.blue_evening'   => 'Hora azul (tarde)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Hora dorada y hora azul para {name}. Creado con lighthours.',
-    'cal.event_description' => "{event} en {name}\nInicio: {start}\nFin: {end}\n\nCreado con lighthours – planificación de luz para foto y vídeo.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Por qué la hora dorada termina después de la puesta de sol',
+    'chart.svg_title' => 'Altura del sol a lo largo de una tarde',
+    'chart.svg_desc' => 'El sol desciende desde seis grados sobre el horizonte hasta menos seis grados. La banda inferior muestra las fases: la hora dorada va de más seis a menos cuatro grados y por tanto continúa más allá de la puesta de sol. Solo después llega la hora azul.',
+    'chart.horizon' => 'Horizonte',
+    'chart.sunset' => 'Puesta de sol',
+    'chart.legend_golden' => 'Hora dorada, +6° a −4°',
+    'chart.legend_after' => 'de ella, tras la puesta de sol',
+    'chart.legend_blue' => 'Hora azul, −4° a −6°',
+    'chart.text_1' => 'Las fases se definen por la altura del sol, no por si se le ve. Su luz no se acaba con la puesta: sigue iluminando la atmósfera desde abajo, y esa luz llega dispersa al suelo. Es cálida, muy suave y ya no proyecta sombras. Por eso la zona de color más intenso sigue contando como hora dorada. Solo a −4° el resplandor pierde fuerza, el propio cielo se convierte en la fuente de luz y empieza la hora azul.',
+    'chart.text_2' => 'Para planificar significa: hasta la puesta, la luz llega de lado y modela; es el momento para personas y paisaje. Después queda un cielo cálido para siluetas y tomas urbanas, pero nada con lo que iluminar un rostro. Por eso cada evento del calendario indica también la puesta de sol, para saber en qué punto de ese intervalo se está.',
+    'cal.event_description' => "{event} en {name}\nInicio: {start}\nFin: {end}\n{sun}\n\nCreado con lighthours – planificación de luz para foto y vídeo.",
+    'cal.sunrise' => "Amanecer: {time}",
+    'cal.sunset' => "Puesta de sol: {time}",
 
     // Cabecera
     'meta.title'       => 'lighthours – Hora dorada y hora azul como calendario suscribible',

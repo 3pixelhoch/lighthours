@@ -16,7 +16,21 @@ return [
     'event.blue_evening'   => 'Ora blu (sera)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Ora d\'oro e ora blu per {name}. Creato con lighthours.',
-    'cal.event_description' => "{event} a {name}\nInizio: {start}\nFine: {end}\n\nCreato con lighthours – pianificazione della luce per foto e video.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Perché l’ora d’oro finisce solo dopo il tramonto',
+    'chart.svg_title' => 'Altezza del sole nel corso di una sera',
+    'chart.svg_desc' => 'Il sole scende da sei gradi sopra l’orizzonte fino a meno sei gradi. La fascia sottostante mostra le fasi: l’ora d’oro va da più sei a meno quattro gradi e prosegue quindi oltre il tramonto. Solo dopo arriva l’ora blu.',
+    'chart.horizon' => 'Orizzonte',
+    'chart.sunset' => 'Tramonto',
+    'chart.legend_golden' => 'Ora d’oro, +6° a −4°',
+    'chart.legend_after' => 'di cui dopo il tramonto',
+    'chart.legend_blue' => 'Ora blu, −4° a −6°',
+    'chart.text_1' => 'Le fasi sono definite dall’altezza del sole, non dal fatto che lo si veda. La sua luce non finisce con il tramonto: continua a illuminare l’atmosfera dal basso, e quella luce arriva diffusa al suolo. È calda, molto morbida e non proietta più ombre. Per questo la zona più intensa conta ancora come ora d’oro. Solo a −4° il bagliore perde forza, il cielo stesso diventa la sorgente di luce e comincia l’ora blu.',
+    'chart.text_2' => 'Per la pianificazione significa: fino al tramonto la luce arriva di lato e modella – è il momento per persone e paesaggio. Dopo resta un cielo caldo per silhouette e riprese urbane, ma nulla con cui illuminare un volto. Ogni evento del calendario indica perciò anche il tramonto, così si sa a che punto si è di questo intervallo.',
+    'cal.event_description' => "{event} a {name}\nInizio: {start}\nFine: {end}\n{sun}\n\nCreato con lighthours – pianificazione della luce per foto e video.",
+    'cal.sunrise' => "Alba: {time}",
+    'cal.sunset' => "Tramonto: {time}",
 
     // Intestazione
     'meta.title'       => 'lighthours – Ora d\'oro e ora blu come calendario da sottoscrivere',

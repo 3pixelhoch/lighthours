@@ -16,7 +16,21 @@ return [
     'event.blue_evening'   => 'Hora azul (noite)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Hora dourada e hora azul para {name}. Criado com o lighthours.',
-    'cal.event_description' => "{event} em {name}\nInício: {start}\nFim: {end}\n\nCriado com o lighthours – planejamento de luz para foto e vídeo.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Por que a hora dourada só termina depois do pôr do sol',
+    'chart.svg_title' => 'Altura do sol ao longo de uma tarde',
+    'chart.svg_desc' => 'O sol desce de seis graus acima do horizonte até menos seis graus. A faixa abaixo mostra as fases: a hora dourada vai de mais seis a menos quatro graus e continua, portanto, depois do pôr do sol. Só então vem a hora azul.',
+    'chart.horizon' => 'Horizonte',
+    'chart.sunset' => 'Pôr do sol',
+    'chart.legend_golden' => 'Hora dourada, +6° a −4°',
+    'chart.legend_after' => 'sendo parte após o pôr do sol',
+    'chart.legend_blue' => 'Hora azul, −4° a −6°',
+    'chart.text_1' => 'As fases são definidas pela altura do sol, não pelo fato de ele estar visível. A luz não acaba com o pôr do sol: ele continua iluminando a atmosfera por baixo, e essa luz chega dispersa ao solo. É quente, muito suave e já não projeta sombras. Por isso a área de cor mais forte ainda conta como hora dourada. Só a −4° o brilho residual perde força, o próprio céu vira a fonte de luz e começa a hora azul.',
+    'chart.text_2' => 'Para o planejamento isso significa: até o pôr do sol a luz vem de lado e modela – é a hora para pessoas e paisagem. Depois resta um céu quente para silhuetas e fotos urbanas, mas nada para iluminar um rosto. Por isso cada evento do calendário informa também o pôr do sol, para você saber em que ponto desse intervalo está.',
+    'cal.event_description' => "{event} em {name}\nInício: {start}\nFim: {end}\n{sun}\n\nCriado com o lighthours – planejamento de luz para foto e vídeo.",
+    'cal.sunrise' => "Nascer do sol: {time}",
+    'cal.sunset' => "Pôr do sol: {time}",
 
     // Cabeçalho
     'meta.title'       => 'lighthours – Hora dourada e hora azul como calendário assinável',

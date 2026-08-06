@@ -17,7 +17,21 @@ return [
     'event.blue_evening'   => 'Heure bleue (soir)',
     'cal.name'             => 'lighthours – {name}',
     'cal.description'      => 'Heure dorée et heure bleue pour {name}. Créé avec lighthours.',
-    'cal.event_description' => "{event} à {name}\nDébut : {start}\nFin : {end}\n\nCréé avec lighthours – planification de la lumière pour la photo et la vidéo.",
+
+    // Diagramm: warum die Goldene Stunde nach Sonnenuntergang endet
+    'chart.heading' => 'Pourquoi l’heure dorée ne se termine qu’après le coucher du soleil',
+    'chart.svg_title' => 'Hauteur du soleil au cours d’une soirée',
+    'chart.svg_desc' => 'Le soleil descend de six degrés au-dessus de l’horizon jusqu’à moins six degrés. La bande du dessous montre les phases : l’heure dorée va de plus six à moins quatre degrés et se poursuit donc après le coucher. L’heure bleue ne vient qu’ensuite.',
+    'chart.horizon' => 'Horizon',
+    'chart.sunset' => 'Coucher du soleil',
+    'chart.legend_golden' => 'Heure dorée, +6° à −4°',
+    'chart.legend_after' => 'dont après le coucher',
+    'chart.legend_blue' => 'Heure bleue, −4° à −6°',
+    'chart.text_1' => 'Les phases sont définies par la hauteur du soleil, non par le fait qu’on le voie. Sa lumière ne s’arrête pas au coucher : il continue d’éclairer l’atmosphère par en dessous, et cette lumière parvient diffusée au sol. Elle est chaude, très douce et ne projette plus d’ombres. C’est pourquoi la zone plus colorée compte encore comme heure dorée. Ce n’est qu’à −4° que la lueur perd sa force, le ciel devient lui-même la source de lumière et l’heure bleue commence.',
+    'chart.text_2' => 'Pour la planification : jusqu’au coucher, la lumière vient de côté et modèle – c’est le moment des portraits et des paysages. Ensuite il reste un ciel chaud pour les silhouettes et les vues urbaines, mais plus rien pour éclairer un visage. Chaque événement du calendrier indique donc aussi le coucher du soleil, afin de savoir où l’on se situe dans cet intervalle.',
+    'cal.event_description' => "{event} à {name}\nDébut : {start}\nFin : {end}\n{sun}\n\nCréé avec lighthours – planification de la lumière pour la photo et la vidéo.",
+    'cal.sunrise' => "Lever du soleil : {time}",
+    'cal.sunset' => "Coucher du soleil : {time}",
 
     // En-tête
     'meta.title'       => 'lighthours – Heure dorée et heure bleue en abonnement calendrier',

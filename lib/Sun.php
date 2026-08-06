@@ -214,10 +214,14 @@ final class Sun
         bool $rising,
         int $dayNoonTs,
         float $lat,
-        float $lon
+        float $lon,
+        bool $withRefraction = true
     ): ?int {
         // Startwert: geometrische Näherung, grob um die Refraktion vorkorrigiert
-        $t = self::approximate($altitudeDeg - 0.08, $rising, $dayNoonTs, $lat, $lon);
+        $t = self::approximate(
+            $altitudeDeg - ($withRefraction ? 0.08 : 0.0),
+            $rising, $dayNoonTs, $lat, $lon
+        );
         if ($t === null) {
             $t = self::approximate($altitudeDeg, $rising, $dayNoonTs, $lat, $lon);
         }
@@ -228,8 +232,8 @@ final class Sun
         // Verfeinerung: Sekantenverfahren auf altitude(t) − Zielhöhe
         $t = (float) $t;
         for ($i = 0; $i < 8; $i++) {
-            $f  = self::altitude((int) round($t), $lat, $lon) - $altitudeDeg;
-            $f2 = self::altitude((int) round($t) + 60, $lat, $lon) - $altitudeDeg;
+            $f  = self::altitude((int) round($t), $lat, $lon, $withRefraction) - $altitudeDeg;
+            $f2 = self::altitude((int) round($t) + 60, $lat, $lon, $withRefraction) - $altitudeDeg;
 
             $slope = ($f2 - $f) / 60.0; // Grad pro Sekunde
             if (abs($slope) < 1e-9) {
@@ -247,7 +251,7 @@ final class Sun
         }
 
         $ts     = (int) round($t);
-        $reached = abs(self::altitude($ts, $lat, $lon) - $altitudeDeg);
+        $reached = abs(self::altitude($ts, $lat, $lon, $withRefraction) - $altitudeDeg);
 
         // Konvergenz prüfen: Höhe muss tatsächlich getroffen worden sein
         return $reached < 0.05 ? $ts : null;

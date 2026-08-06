@@ -19,6 +19,8 @@ line in `lib/config.php`, done. No database, no Composer, no dependencies.
 - Optional reminder 15, 30 or 60 minutes before a phase starts
 - Proper `VTIMEZONE` including daylight saving transitions
 - Stable event UIDs, so calendar apps don't create duplicates
+- Every event states sunrise or sunset as a reference point: the evening
+  golden hour only ends about 25 minutes after the sun has set
 
 ### Calculation
 
@@ -64,7 +66,7 @@ line in `lib/config.php`, done. No database, no Composer, no dependencies.
   most common stumbling block on first setup
 - Optional email delivery of the subscription link via SMTP or `mail()`, off by
   default, with an abuse throttle
-- 119 tests without a framework: `php tests/run.php`
+- 138 tests without a framework: `php tests/run.php`
 
 ### Search engines
 
