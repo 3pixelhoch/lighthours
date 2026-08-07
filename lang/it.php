@@ -28,6 +28,34 @@ return [
     'chart.legend_blue' => 'Ora blu, −4° a −6°',
     'chart.text_1' => 'Le fasi sono definite dall’altezza del sole, non dal fatto che lo si veda. La sua luce non finisce con il tramonto: continua a illuminare l’atmosfera dal basso, e quella luce arriva diffusa al suolo. È calda, molto morbida e non proietta più ombre. Per questo la zona più intensa conta ancora come ora d’oro. Solo a −4° il bagliore perde forza, il cielo stesso diventa la sorgente di luce e comincia l’ora blu.',
     'chart.text_2' => 'Per la pianificazione significa: fino al tramonto la luce arriva di lato e modella – è il momento per persone e paesaggio. Dopo resta un cielo caldo per silhouette e riprese urbane, ma nulla con cui illuminare un volto. Ogni evento del calendario indica perciò anche il tramonto, così si sa a che punto si è di questo intervallo.',
+
+    // Aufteilung an der Horizontgrenze und zweite Erinnerung
+    'cal.sun_above' => 'Sole sopra l’orizzonte: {from}–{to}',
+    'cal.alarm_prep' => 'Prepararsi: {event} inizia a breve',
+
+    // Wochentagswahl und Vorbereitungszeit im Generator
+    'gen.days_label' => 'Giorni della settimana',
+    'gen.days_all' => 'Tutti i giorni',
+    'gen.days_week' => 'Da lunedì a venerdì',
+    'gen.days_weekend' => 'Fine settimana',
+    'gen.days_custom' => 'Scelta personale',
+    'gen.days_hint' => 'Meno giorni significano meno voci nel calendario. Chi fotografa solo nel fine settimana non ha bisogno della settimana.',
+    'gen.prep_label' => 'Tempo di preparazione',
+    'gen.prep_none' => 'Nessuno',
+    'gen.prep_hint' => 'Un promemoria aggiuntivo e anticipato, solo per l’ora d’oro, per non avere troppe notifiche.',
+    'gen.d1' => 'Lun',
+    'gen.d2' => 'Mar',
+    'gen.d3' => 'Mer',
+    'gen.d4' => 'Gio',
+    'gen.d5' => 'Ven',
+    'gen.d6' => 'Sab',
+    'gen.d7' => 'Dom',
+
+    // Rückkanal für falsche Zeiten
+    'report.title' => 'Gli orari non ti tornano?',
+    'report.text' => 'Gli orari sbagliati sono l’unico errore che non posso trovare da solo: non posso controllare ogni luogo del mondo. Se qualcosa non torna, fammelo sapere.',
+    'report.link' => 'Segnala una differenza',
+    'footer.report' => 'Segnala un errore',
     'cal.event_description' => "{event} a {name}\nInizio: {start}\nFine: {end}\n{sun}\n\nCreato con lighthours – pianificazione della luce per foto e video.",
     'cal.sunrise' => "Alba: {time}",
     'cal.sunset' => "Tramonto: {time}",
@@ -216,9 +244,14 @@ return [
     'screens.intro' => 'Nessuna app, nessun account: gli eventi compaiono dove già guardi.',
     'screens.week_alt' => 'Due giorni consecutivi nella vista settimanale, ciascuno con un evento dell\'ora d\'oro',
     'screens.week_cap' => 'Due giorni consecutivi a Berlino: 18:52, poi 18:54. L\'ora d\'oro si sposta di uno o due minuti al giorno: nessuno se lo ricorda a memoria.',
-    'screens.event_alt' => 'Un evento aperto con luogo, orario e descrizione',
-    'screens.event_cap' => 'Ogni evento indica inizio, fine e luogo. Lingua e descrizione derivano dalle impostazioni scelte alla creazione.',
-    'screens.note' => 'Schermate da Apple Calendario. Gli stessi eventi compaiono in Google Calendar e Outlook.',
+    'screens.event_alt' => 'Un evento con luogo, orari e tramonto',
+    'screens.event_cap' => 'Ogni evento indica inizio, fine, luogo e il tramonto come riferimento. Lingua e descrizione derivano dalle impostazioni scelte al momento della creazione.',
+    // Beschriftungen der nachgezeichneten Terminkarte
+    'screens.card_date' => 'Martedì 4 agosto',
+    'screens.card_above' => 'Sole sopra l’orizzonte',
+    'screens.card_alarms' => 'Promemoria 2 ore e 30 minuti prima',
+    'screens.card_source' => 'Creato con lighthours',
+    'screens.note' => 'Entrambe le figure sono rappresentazioni ridisegnate. Le stesse indicazioni compaiono in Apple Calendario, Google Calendar e Outlook; le schermate di un’app reale sono nel repository.',
 
     // Anonyme Zählung
     'stats.line' => 'lighthours tiene aggiornati <strong>{count} calendari</strong>.',

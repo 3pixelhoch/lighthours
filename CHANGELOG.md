@@ -5,6 +5,33 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 [Deutsche Fassung](CHANGELOG.de.md)
 
+## [1.1.0] – 2026-08-07
+
+### Calendar
+
+- Golden hour events name the stretch where the sun is above the horizon –
+  only there does the light come from the side and model
+- Weekdays can be restricted: a two-year subscription drops from 2928 events
+  to a few hundred
+- A second, earlier reminder for preparation, deliberately on golden hours
+  only, so it does not become eight alerts a day
+- Every event states sunrise or sunset as a reference point
+
+### Website
+
+- A diagram on the home page explains why the golden hour only ends after
+  sunset
+- A visible way to report times that look wrong
+
+### Fixed
+
+- On the legal pages the logo linked to the page you were already on instead
+  of the home page
+- Without a country code the timezone lookup returned "UTC" instead of
+  "Atlantic/Reykjavik" – correct in time, wrong as a calendar label
+- The API printed coordinates with seventeen decimal places
+- On phones the search field and button sat side by side instead of stacked
+
 ## [1.0.0] – 2026-08-02
 
 First complete release. Runs on any web space with PHP 8.1: upload, set one
@@ -66,7 +93,7 @@ line in `lib/config.php`, done. No database, no Composer, no dependencies.
   most common stumbling block on first setup
 - Optional email delivery of the subscription link via SMTP or `mail()`, off by
   default, with an abuse throttle
-- 138 tests without a framework: `php tests/run.php`
+- 163 tests without a framework: `php tests/run.php`
 
 ### Search engines
 

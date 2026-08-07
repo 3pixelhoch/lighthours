@@ -48,6 +48,7 @@ declare(strict_types=1);
         <a href="./?lang=<?= LightHours\h($lang) ?>#generator"><?= $i18n->e('nav.generator') ?></a>
 <?php if (LH_SOURCE_URL !== ''): ?>
         <a href="<?= LightHours\h(LH_SOURCE_URL) ?>" rel="noopener"><?= $i18n->e('footer.source') ?></a>
+        <a href="<?= LightHours\h(LightHours\report_url()) ?>" rel="noopener"><?= $i18n->e('footer.report') ?></a>
 <?php endif; ?>
         <a href="api/times.php?lat=53.5511&amp;lon=9.9937"><?= $i18n->e('footer.api') ?></a>
         <a href="datenschutz.php?lang=<?= LightHours\h($lang) ?>"><?= $i18n->e('footer.privacy') ?></a>

@@ -3,7 +3,7 @@
   <img alt="lighthours – golden hour, in your calendar" src="assets/img/readme-hell.png">
 </picture>
 
-[![Version](https://img.shields.io/badge/version-1.0.0-C97B2C)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-C97B2C)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-3C5A8F)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4)](https://www.php.net/)
 [![No dependencies](https://img.shields.io/badge/dependencies-none-16171B)](#installation)
@@ -213,7 +213,7 @@ lang/                  de en it fr es pt
 legal/                 Privacy and legal notice text (de, en)
 partials/              Shared head, footer and legal page scaffold
 assets/                Fonts, images, CSS, JS, MapLibre
-tests/run.php          138 tests, no framework
+tests/run.php          163 tests, no framework
 ```
 
 Modules under `lib/` know about each other only where necessary and can be used
@@ -236,7 +236,7 @@ like `{minutes}` survived translation.
 php tests/run.php
 ```
 
-138 checks covering the astronomy against reference values, ICS structure and
+163 checks covering the astronomy against reference values, ICS structure and
 line folding, time zone resolution, translation completeness, design tokens and
 the search-engine basics. No framework, no dependencies.
 

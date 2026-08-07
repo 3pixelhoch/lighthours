@@ -106,6 +106,51 @@ function read_events(?string $raw): array
 }
 
 /**
+ * Adresse, unter der sich falsche Zeiten melden lassen.
+ *
+ * Wird aus der Quellcode-Adresse abgeleitet, damit es keine zweite Einstellung
+ * gibt, die man vergessen kann. Wer das Projekt ohne öffentliches Repository
+ * betreibt, bekommt keinen Verweis ins Leere: dann ist der Rückgabewert leer
+ * und der Hinweis verschwindet.
+ */
+function report_url(): string
+{
+    if (LH_SOURCE_URL === '') {
+        return '';
+    }
+
+    return rtrim(LH_SOURCE_URL, '/') . (str_contains(LH_SOURCE_URL, 'github.com') ? '/issues' : '');
+}
+
+/**
+ * Gewünschte Wochentage lesen (ISO 8601: 1 = Montag ... 7 = Sonntag).
+ *
+ * Leer oder unbrauchbar bedeutet: alle Tage. Ein Kalender ohne Tage wäre leer,
+ * und ein leeres Abo sieht für den Nutzer aus wie ein Fehler.
+ *
+ * @return int[]|null null = keine Einschränkung
+ */
+function read_weekdays(?string $raw): ?array
+{
+    if ($raw === null || trim($raw) === '') {
+        return null;
+    }
+
+    $tage = [];
+    foreach (explode(',', $raw) as $teil) {
+        $n = filter_var(trim($teil), FILTER_VALIDATE_INT);
+        if ($n !== false && $n >= 1 && $n <= 7) {
+            $tage[$n] = true;
+        }
+    }
+
+    $tage = array_keys($tage);
+    sort($tage);
+
+    return ($tage === [] || count($tage) === 7) ? null : $tage;
+}
+
+/**
  * Ist in LH_USER_AGENT eine echte Kontaktadresse hinterlegt?
  *
  * Nominatim sperrt Anfragen mit Platzhalteradressen mit HTTP 403 ab

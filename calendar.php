@@ -8,6 +8,8 @@
  *
  * Beispiel:
  *   /calendar.php?lat=53.5511&lon=9.9937&months=24&rolling=1&events=golden_evening
+ *   &days=5,6,7   nur Freitag bis Sonntag (1 = Montag)
+ *   &prep=120     zusätzliche Erinnerung zwei Stunden vorher
  */
 
 declare(strict_types=1);
@@ -42,6 +44,18 @@ if (isset($_GET['reminder']) && $_GET['reminder'] !== '') {
     }
 }
 
+// Vorbereitungszeit: zweite, frühere Erinnerung
+$prep = null;
+if (isset($_GET['prep']) && $_GET['prep'] !== '') {
+    $v = filter_var($_GET['prep'], FILTER_VALIDATE_INT);
+    if ($v !== false && $v > 0 && $v <= 1440) {
+        $prep = $v;
+    }
+}
+
+// Wochentage
+$weekdays = LightHours\read_weekdays($_GET['days'] ?? null);
+
 // Zeitraum bestimmen
 $months = filter_var($_GET['months'] ?? 12, FILTER_VALIDATE_INT) ?: 12;
 $months = max(1, min(LH_MAX_MONTHS, $months));
@@ -72,7 +86,7 @@ if (!$rolling && $endRaw !== '') {
 Stats::record(Stats::fingerprint($lat, $lon, $events, $months, $tzId));
 
 $i18n = new I18n($lang);
-$ics  = Ics::build($lat, $lon, $today, $end, $events, $tz, $i18n, $reminder, $name);
+$ics  = Ics::build($lat, $lon, $today, $end, $events, $tz, $i18n, $reminder, $name, $weekdays, $prep);
 
 // Dateiname aus dem Ortsnamen ableiten
 $slug = strtolower((string) preg_replace('/[^A-Za-z0-9]+/', '-', $name));

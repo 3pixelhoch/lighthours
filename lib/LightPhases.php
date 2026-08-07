@@ -110,13 +110,24 @@ final class LightPhases
         float $lat,
         float $lon,
         ?array $events = null,
-        ?\DateTimeZone $tz = null
+        ?\DateTimeZone $tz = null,
+        ?array $weekdays = null
     ): array {
         $all  = [];
         $day  = $from->setTime(0, 0);
         $last = $to->setTime(0, 0);
 
         while ($day <= $last) {
+            // Wochentage werden vor der Rechnung geprüft, nicht danach: Ein Abo
+            // über zwei Jahre mit allen vier Phasen umfasst 2928 Termine, und
+            // ein zugeschütteter Kalender ist der häufigste Grund, ein Abo
+            // wieder zu löschen. Wer nur Freitag bis Sonntag braucht, spart
+            // sich fünf Siebtel davon - und der Server die Rechenarbeit.
+            if ($weekdays !== null && !in_array((int) $day->format('N'), $weekdays, true)) {
+                $day = $day->modify('+1 day');
+                continue;
+            }
+
             foreach (self::forDay($day, $lat, $lon, $events, $tz) as $phase) {
                 $all[] = $phase;
             }

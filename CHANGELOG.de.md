@@ -5,6 +5,33 @@
 Das Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Nummerierung [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.1.0] – 2026-08-07
+
+### Kalender
+
+- Goldene Stunden nennen den Abschnitt, in dem die Sonne über dem Horizont
+  steht – nur dort kommt das Licht von der Seite und modelliert
+- Wochentage lassen sich einschränken: Ein Abo über zwei Jahre schrumpft damit
+  von 2928 auf wenige hundert Termine
+- Zweite, frühere Erinnerung zum Vorbereiten, bewusst nur an den Goldenen
+  Stunden, damit nicht acht Meldungen am Tag entstehen
+- Jeder Termin nennt Sonnenauf- beziehungsweise -untergang als Bezugspunkt
+
+### Website
+
+- Grafik auf der Startseite erklärt, warum die Goldene Stunde erst nach
+  Sonnenuntergang endet
+- Sichtbarer Weg, falsche Zeiten zu melden
+
+### Behoben
+
+- Das Logo führte auf den Rechtsseiten nicht zur Startseite, sondern auf die
+  Seite, auf der man schon stand
+- Ohne Ländercode lieferte die Zeitzonenwahl „UTC" statt „Atlantic/Reykjavik" –
+  zeitlich richtig, als Kalenderbeschriftung falsch
+- Die API gab Koordinaten mit siebzehn Nachkommastellen aus
+- Suchfeld und Knopf standen auf dem Telefon nebeneinander statt untereinander
+
 ## [1.0.0] – 2026-08-02
 
 Erste vollständige Fassung. Läuft auf jedem Webspace mit PHP 8.1: hochladen,
@@ -66,7 +93,7 @@ Composer, keine Abhängigkeiten.
   die häufigste Stolperfalle beim ersten Aufsetzen
 - Freiwilliger E-Mail-Versand des Abo-Links über SMTP oder `mail()`,
   ab Werk ausgeschaltet, mit Missbrauchsbremse
-- 138 Tests ohne Framework: `php tests/run.php`
+- 163 Tests ohne Framework: `php tests/run.php`
 
 ### Suchmaschinen
 

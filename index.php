@@ -95,24 +95,14 @@ require __DIR__ . '/partials/kopf.php';
       <div class="screen-grid">
         <figure class="screen">
           <div class="screen-frame">
-            <img class="screen-light" src="assets/img/screens/kalender-woche-hell.webp"
-                 width="604" height="420" loading="lazy" decoding="async"
-                 alt="<?= e('screens.week_alt') ?>">
-            <img class="screen-dark" src="assets/img/screens/kalender-woche-dunkel.webp"
-                 width="604" height="420" loading="lazy" decoding="async"
-                 alt="<?= e('screens.week_alt') ?>">
+            <?php require __DIR__ . '/partials/wochenkarte.php'; ?>
           </div>
           <figcaption><?= e('screens.week_cap') ?></figcaption>
         </figure>
 
         <figure class="screen">
           <div class="screen-frame">
-            <img class="screen-light" src="assets/img/screens/kalender-termin-hell.webp"
-                 width="604" height="420" loading="lazy" decoding="async"
-                 alt="<?= e('screens.event_alt') ?>">
-            <img class="screen-dark" src="assets/img/screens/kalender-termin-dunkel.webp"
-                 width="604" height="420" loading="lazy" decoding="async"
-                 alt="<?= e('screens.event_alt') ?>">
+            <?php require __DIR__ . '/partials/terminkarte.php'; ?>
           </div>
           <figcaption><?= e('screens.event_cap') ?></figcaption>
         </figure>
@@ -240,6 +230,38 @@ require __DIR__ . '/partials/kopf.php';
               <option value="60"><?= e('gen.reminder_60') ?></option>
             </select>
           </div>
+
+          <div class="field">
+            <label for="prep"><?= e('gen.prep_label') ?></label>
+            <select id="prep">
+              <option value=""><?= e('gen.prep_none') ?></option>
+              <option value="60">1 h</option>
+              <option value="120">2 h</option>
+              <option value="180">3 h</option>
+            </select>
+            <p class="hint"><?= e('gen.prep_hint') ?></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="weekdays"><?= e('gen.days_label') ?></label>
+          <select id="weekdays">
+            <option value="all"><?= e('gen.days_all') ?></option>
+            <option value="1,2,3,4,5"><?= e('gen.days_week') ?></option>
+            <option value="6,7"><?= e('gen.days_weekend') ?></option>
+            <option value="custom"><?= e('gen.days_custom') ?></option>
+          </select>
+
+          <div class="weekday-grid" id="weekday-grid" hidden>
+            <?php foreach ([1, 2, 3, 4, 5, 6, 7] as $d): ?>
+              <label class="weekday">
+                <input type="checkbox" value="<?= $d ?>" checked>
+                <span><?= e('gen.d' . $d) ?></span>
+              </label>
+            <?php endforeach; ?>
+          </div>
+
+          <p class="hint"><?= e('gen.days_hint') ?></p>
         </div>
 
         <div class="field">
@@ -323,6 +345,17 @@ require __DIR__ . '/partials/kopf.php';
         </div>
         <div class="tile"><h3><?= e('privacy.title') ?></h3><p><?= e('privacy.text') ?></p></div>
       </div>
+
+<?php if (LightHours\report_url() !== ''): ?>
+      <!-- Der einzige Fehler, den niemand hier findet, ist eine falsche Zeit an
+           einem Ort, den niemand geprüft hat. Also muss der Weg dorthin sichtbar
+           sein - nicht nur eine Adresse im Impressum. -->
+      <p class="report-line">
+        <strong><?= e('report.title') ?></strong>
+        <?= e('report.text') ?>
+        <a href="<?= LightHours\h(LightHours\report_url()) ?>" rel="noopener"><?= e('report.link') ?> →</a>
+      </p>
+<?php endif; ?>
     </div>
   </section>
 

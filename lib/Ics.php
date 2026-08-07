@@ -25,6 +25,8 @@ final class Ics
      *
      * @param string[]      $events          gewünschte Phasen
      * @param int|null      $reminderMinutes Vorlauf der Erinnerung, null = keine
+     * @param int[]|null    $weekdays        nur diese Wochentage (1 = Mo), null = alle
+     * @param int|null      $prepMinutes     zweite, frühere Erinnerung zum Vorbereiten
      */
     public static function build(
         float $lat,
@@ -35,7 +37,9 @@ final class Ics
         \DateTimeZone $tz,
         I18n $i18n,
         ?int $reminderMinutes = null,
-        string $locationName = ''
+        string $locationName = '',
+        ?array $weekdays = null,
+        ?int $prepMinutes = null
     ): string {
         $name  = $locationName !== '' ? $locationName : sprintf('%.4f, %.4f', $lat, $lon);
         $utc   = new \DateTimeZone('UTC');
@@ -58,7 +62,7 @@ final class Ics
             $lines[] = $line;
         }
 
-        foreach (LightPhases::forRange($from, $to, $lat, $lon, $events, $tz) as $phase) {
+        foreach (LightPhases::forRange($from, $to, $lat, $lon, $events, $tz, $weekdays) as $phase) {
             $start = (new \DateTimeImmutable('@' . $phase['start']))->setTimezone($tz);
             $end   = (new \DateTimeImmutable('@' . $phase['end']))->setTimezone($tz);
             $title = $i18n->t('event.' . $phase['event']);
@@ -76,14 +80,27 @@ final class Ics
             // Sonnenauf- oder -untergang als Bezugspunkt. Die Goldene Stunde
             // endet abends erst 25 Minuten nach dem Untergang – ohne diese
             // Zeile wirkt der Termin schlicht falsch.
-            $bezug = '';
-            if (isset($phase['horizon']) && $phase['horizon'] !== null) {
-                $zeit = (new \DateTimeImmutable('@' . $phase['horizon']))
-                    ->setTimezone($tz)->format('H:i');
-                $bezug = $i18n->t(
-                    ($phase['rising'] ?? false) ? 'cal.sunrise' : 'cal.sunset',
-                    ['time' => $zeit]
-                );
+            $bezug   = '';
+            $horizont = $phase['horizon'] ?? null;
+            $steigend = (bool) ($phase['rising'] ?? false);
+
+            if ($horizont !== null) {
+                $zeit  = (new \DateTimeImmutable('@' . $horizont))->setTimezone($tz);
+                $bezug = $i18n->t($steigend ? 'cal.sunrise' : 'cal.sunset',
+                    ['time' => $zeit->format('H:i')]);
+
+                // Bei den Goldenen Stunden liegt der Auf- beziehungsweise
+                // Untergang mitten im Termin. Nur der Abschnitt mit der Sonne
+                // über dem Horizont liefert gerichtetes Licht; danach bleibt
+                // Nachglühen, mit dem sich kein Gesicht mehr ausleuchten lässt.
+                // Deshalb wird er benannt - beschreibend, nicht als Empfehlung.
+                if (str_starts_with($phase['event'], 'golden_')
+                    && $horizont > $phase['start'] && $horizont < $phase['end']) {
+                    $bezug .= "\n" . $i18n->t('cal.sun_above', [
+                        'from' => ($steigend ? $zeit : $start)->format('H:i'),
+                        'to'   => ($steigend ? $end : $zeit)->format('H:i'),
+                    ]);
+                }
             }
 
             $lines[] = 'DESCRIPTION:' . self::esc($i18n->t('cal.event_description', [
@@ -94,11 +111,23 @@ final class Ics
                 'sun'   => $bezug,
             ]));
 
+            // Die frühere Erinnerung hängt bewusst nur an den Goldenen Stunden.
+            // An allen vier Phasen wären es acht Benachrichtigungen am Tag, und
+            // wer achtmal täglich gestört wird, schaltet sie ganz ab.
+            $alarme = [];
+            if ($prepMinutes !== null && $prepMinutes > 0
+                && str_starts_with($phase['event'], 'golden_')) {
+                $alarme[] = [$prepMinutes, $i18n->t('cal.alarm_prep', ['event' => $title])];
+            }
             if ($reminderMinutes !== null && $reminderMinutes > 0) {
+                $alarme[] = [$reminderMinutes, self::EMOJI[$phase['event']] . ' ' . $title];
+            }
+
+            foreach ($alarme as [$vorlauf, $text]) {
                 $lines[] = 'BEGIN:VALARM';
                 $lines[] = 'ACTION:DISPLAY';
-                $lines[] = 'DESCRIPTION:' . self::esc(self::EMOJI[$phase['event']] . ' ' . $title);
-                $lines[] = 'TRIGGER:-PT' . $reminderMinutes . 'M';
+                $lines[] = 'DESCRIPTION:' . self::esc($text);
+                $lines[] = 'TRIGGER:-PT' . $vorlauf . 'M';
                 $lines[] = 'END:VALARM';
             }
 

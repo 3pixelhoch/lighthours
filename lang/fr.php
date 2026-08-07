@@ -29,6 +29,34 @@ return [
     'chart.legend_blue' => 'Heure bleue, −4° à −6°',
     'chart.text_1' => 'Les phases sont définies par la hauteur du soleil, non par le fait qu’on le voie. Sa lumière ne s’arrête pas au coucher : il continue d’éclairer l’atmosphère par en dessous, et cette lumière parvient diffusée au sol. Elle est chaude, très douce et ne projette plus d’ombres. C’est pourquoi la zone plus colorée compte encore comme heure dorée. Ce n’est qu’à −4° que la lueur perd sa force, le ciel devient lui-même la source de lumière et l’heure bleue commence.',
     'chart.text_2' => 'Pour la planification : jusqu’au coucher, la lumière vient de côté et modèle – c’est le moment des portraits et des paysages. Ensuite il reste un ciel chaud pour les silhouettes et les vues urbaines, mais plus rien pour éclairer un visage. Chaque événement du calendrier indique donc aussi le coucher du soleil, afin de savoir où l’on se situe dans cet intervalle.',
+
+    // Aufteilung an der Horizontgrenze und zweite Erinnerung
+    'cal.sun_above' => 'Soleil au-dessus de l’horizon : {from}–{to}',
+    'cal.alarm_prep' => 'Se préparer : {event} commence bientôt',
+
+    // Wochentagswahl und Vorbereitungszeit im Generator
+    'gen.days_label' => 'Jours de la semaine',
+    'gen.days_all' => 'Tous les jours',
+    'gen.days_week' => 'Du lundi au vendredi',
+    'gen.days_weekend' => 'Week-end',
+    'gen.days_custom' => 'Choix personnalisé',
+    'gen.days_hint' => 'Moins de jours, moins d’entrées dans l’agenda. Si vous photographiez seulement le week-end, la semaine est inutile.',
+    'gen.prep_label' => 'Temps de préparation',
+    'gen.prep_none' => 'Aucun',
+    'gen.prep_hint' => 'Un rappel supplémentaire, plus tôt – uniquement pour l’heure dorée, afin d’éviter trop de notifications.',
+    'gen.d1' => 'Lu',
+    'gen.d2' => 'Ma',
+    'gen.d3' => 'Me',
+    'gen.d4' => 'Je',
+    'gen.d5' => 'Ve',
+    'gen.d6' => 'Sa',
+    'gen.d7' => 'Di',
+
+    // Rückkanal für falsche Zeiten
+    'report.title' => 'Les horaires vous semblent faux ?',
+    'report.text' => 'Des horaires erronés sont la seule erreur que je ne peux pas trouver seul – je ne peux pas vérifier chaque endroit du monde. Si quelque chose cloche, dites-le-moi.',
+    'report.link' => 'Signaler un écart',
+    'footer.report' => 'Signaler un problème',
     'cal.event_description' => "{event} à {name}\nDébut : {start}\nFin : {end}\n{sun}\n\nCréé avec lighthours – planification de la lumière pour la photo et la vidéo.",
     'cal.sunrise' => "Lever du soleil : {time}",
     'cal.sunset' => "Coucher du soleil : {time}",
@@ -217,9 +245,14 @@ return [
     'screens.intro' => 'Pas d\'application, pas de compte : les événements apparaissent là où vous regardez déjà.',
     'screens.week_alt' => 'Deux jours consécutifs en vue semaine, chacun avec un événement heure dorée',
     'screens.week_cap' => 'Deux jours consécutifs à Berlin : 18 h 52, puis 18 h 54. L\'heure dorée se décale d\'une à deux minutes par jour – personne ne retient cela de tête.',
-    'screens.event_alt' => 'Un événement ouvert avec lieu, horaire et description',
-    'screens.event_cap' => 'Chaque événement indique le début, la fin et le lieu. La langue et la description proviennent des réglages choisis à la création.',
-    'screens.note' => 'Captures d\'écran d\'Apple Calendrier. Les mêmes événements apparaissent dans Google Agenda et Outlook.',
+    'screens.event_alt' => 'Un événement avec lieu, horaires et coucher du soleil',
+    'screens.event_cap' => 'Chaque événement indique le début, la fin, le lieu et le coucher du soleil comme repère. La langue et la description viennent des réglages choisis à la création.',
+    // Beschriftungen der nachgezeichneten Terminkarte
+    'screens.card_date' => 'Mardi 4 août',
+    'screens.card_above' => 'Soleil au-dessus de l’horizon',
+    'screens.card_alarms' => 'Rappels 2 heures et 30 minutes avant',
+    'screens.card_source' => 'Créé avec lighthours',
+    'screens.note' => 'Les deux illustrations sont des représentations dessinées. Les mêmes informations apparaissent dans Apple Calendrier, Google Agenda et Outlook ; des captures d’une vraie application se trouvent dans le dépôt.',
 
     // Anonyme Zählung
     'stats.line' => 'lighthours tient actuellement <strong>{count} agendas</strong> à jour.',

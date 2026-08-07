@@ -242,6 +242,83 @@ foreach (I18n::available() as $l) {
         'Platzhalter {time} oder {sun} fehlt');
 }
 
+echo "\nWochentage, Aufteilung und Erinnerungen\n";
+
+$wTz  = new DateTimeZone('Europe/Berlin');
+$wVon = new DateTimeImmutable('2026-08-10', $wTz);   // ein Montag
+$wBis = new DateTimeImmutable('2026-08-23', $wTz);   // zwei volle Wochen
+
+$alleTage = LightPhases::forRange($wVon, $wBis, 53.0595, 8.8146, ['golden_evening'], $wTz);
+$nurWoEnd = LightPhases::forRange($wVon, $wBis, 53.0595, 8.8146, ['golden_evening'], $wTz, [6, 7]);
+
+check('Wochentagsfilter reduziert die Termine',
+    count($alleTage) === 14 && count($nurWoEnd) === 4,
+    count($alleTage) . ' bzw. ' . count($nurWoEnd) . ' statt 14 bzw. 4');
+
+check('gefiltert bleiben nur die gewählten Tage',
+    array_filter($nurWoEnd, static function (array $p) use ($wTz): bool {
+        $tag = (int) (new DateTimeImmutable('@' . $p['start']))->setTimezone($wTz)->format('N');
+        return $tag !== 6 && $tag !== 7;
+    }) === []);
+
+// read_weekdays: eine leere oder vollständige Auswahl darf keinen leeren
+// Kalender erzeugen - das sähe für den Nutzer wie ein Fehler aus.
+check('leere Tagesangabe bedeutet alle Tage', LightHours\read_weekdays('') === null);
+check('unsinnige Tagesangabe bedeutet alle Tage', LightHours\read_weekdays('0,9,x') === null);
+check('vollständige Woche bedeutet alle Tage', LightHours\read_weekdays('1,2,3,4,5,6,7') === null);
+check('Tage werden sortiert und entdoppelt', LightHours\read_weekdays('7,6,6') === [6, 7]);
+
+$einTag = new DateTimeImmutable('2026-08-04', $wTz);
+$mitAllem = Ics::build(53.0595, 8.8146, $einTag, $einTag,
+    ['golden_morning', 'golden_evening', 'blue_morning', 'blue_evening'],
+    $wTz, new I18n('de'), 30, 'Bremen', null, 120);
+$flach = str_replace("\r\n ", '', $mitAllem);
+
+check('Goldene Stunden nennen den Abschnitt über dem Horizont',
+    substr_count($flach, 'Sonne über dem Horizont') === 2,
+    substr_count($flach, 'Sonne über dem Horizont') . ' statt 2');
+
+check('Blaue Stunden bekommen keine Aufteilung',
+    !preg_match('~Blaue Stunde[^\n]*\n[^\n]*Sonne über dem Horizont~', $flach));
+
+// Vier Phasen mal zwei Alarme wären acht Meldungen am Tag. Die frühe
+// Erinnerung hängt deshalb nur an den Goldenen Stunden: 4 + 2 = 6.
+check('frühe Erinnerung nur an den Goldenen Stunden',
+    substr_count($mitAllem, 'BEGIN:VALARM') === 6,
+    substr_count($mitAllem, 'BEGIN:VALARM') . ' Alarme statt 6');
+check('die frühe Erinnerung liegt vorne',
+    str_contains($mitAllem, 'TRIGGER:-PT120M') && str_contains($mitAllem, 'TRIGGER:-PT30M'));
+
+$ohnePrep = Ics::build(53.0595, 8.8146, $einTag, $einTag,
+    ['golden_evening'], $wTz, new I18n('de'), 30, 'Bremen');
+check('ohne Vorbereitungszeit bleibt es bei einem Alarm',
+    substr_count($ohnePrep, 'BEGIN:VALARM') === 1);
+
+foreach (I18n::available() as $l) {
+    $t = new I18n($l);
+    check("Wochentage übersetzt: {$l}",
+        str_contains($t->t('cal.sun_above', ['from' => '20:24', 'to' => '21:13']), '21:13')
+        && $t->t('gen.d1') !== 'gen.d1' && $t->t('gen.d7') !== 'gen.d7'
+        && $t->t('gen.days_label') !== 'gen.days_label');
+}
+
+// Rückkanal: Ohne sichtbaren Weg für Rückmeldungen erfährt niemand von
+// falschen Zeiten an Orten, die hier nie jemand geprüft hat.
+check('Meldeadresse wird aus der Quelle abgeleitet',
+    LH_SOURCE_URL === '' || str_ends_with(LightHours\report_url(), '/issues'),
+    LightHours\report_url());
+check('ohne Quellcode-Adresse kein Verweis ins Leere',
+    LH_SOURCE_URL !== '' || LightHours\report_url() === '');
+
+foreach (I18n::available() as $l) {
+    $t = new I18n($l);
+    $fehlt = array_values(array_filter(
+        ['report.title', 'report.text', 'report.link', 'footer.report'],
+        static fn(string $k): bool => $t->t($k) === $k || $t->t($k) === ''
+    ));
+    check("Meldetexte vollständig: {$l}", $fehlt === [], implode(', ', $fehlt));
+}
+
 echo "\nKalenderdatei\n";
 
 $i18n = new I18n('de');
@@ -618,6 +695,23 @@ foreach (I18n::available() as $l) {
     }
     check("Diagrammtexte vollständig: {$l}", $fehlt === [], implode(', ', $fehlt));
 }
+
+// Beim Umbau der Terminkarte auf eingebettetes SVG wurden die zugehörigen
+// Bilddateien gelöscht - und damit die Verweise im README stillschweigend
+// kaputtgemacht. Auf GitHub sieht man das erst, wenn es online ist.
+$bilder = [];
+foreach (['README.md', 'README.de.md', 'index.php', 'partials/kopf.php'] as $datei) {
+    $inhalt = (string) file_get_contents(__DIR__ . '/../' . $datei);
+    preg_match_all('~(?:src|srcset|href)="(assets/img/[^"]+)"~', $inhalt, $treffer);
+    foreach ($treffer[1] as $pfad) { $bilder[$pfad] = $datei; }
+}
+
+$fehlend = [];
+foreach ($bilder as $pfad => $datei) {
+    if (!is_file(__DIR__ . '/../' . $pfad)) { $fehlend[] = "{$pfad} ({$datei})"; }
+}
+check('alle verwiesenen Bilddateien existieren', $fehlend === [], implode(', ', $fehlend));
+check('es werden überhaupt Bilder geprüft', count($bilder) >= 5, count($bilder) . ' gefunden');
 
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,

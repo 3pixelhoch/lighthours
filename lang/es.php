@@ -28,6 +28,34 @@ return [
     'chart.legend_blue' => 'Hora azul, −4° a −6°',
     'chart.text_1' => 'Las fases se definen por la altura del sol, no por si se le ve. Su luz no se acaba con la puesta: sigue iluminando la atmósfera desde abajo, y esa luz llega dispersa al suelo. Es cálida, muy suave y ya no proyecta sombras. Por eso la zona de color más intenso sigue contando como hora dorada. Solo a −4° el resplandor pierde fuerza, el propio cielo se convierte en la fuente de luz y empieza la hora azul.',
     'chart.text_2' => 'Para planificar significa: hasta la puesta, la luz llega de lado y modela; es el momento para personas y paisaje. Después queda un cielo cálido para siluetas y tomas urbanas, pero nada con lo que iluminar un rostro. Por eso cada evento del calendario indica también la puesta de sol, para saber en qué punto de ese intervalo se está.',
+
+    // Aufteilung an der Horizontgrenze und zweite Erinnerung
+    'cal.sun_above' => 'Sol sobre el horizonte: {from}–{to}',
+    'cal.alarm_prep' => 'Prepárate: {event} empieza pronto',
+
+    // Wochentagswahl und Vorbereitungszeit im Generator
+    'gen.days_label' => 'Días de la semana',
+    'gen.days_all' => 'Todos los días',
+    'gen.days_week' => 'De lunes a viernes',
+    'gen.days_weekend' => 'Fin de semana',
+    'gen.days_custom' => 'Selección propia',
+    'gen.days_hint' => 'Menos días significan menos entradas en el calendario. Quien solo fotografía el fin de semana no necesita la semana.',
+    'gen.prep_label' => 'Tiempo de preparación',
+    'gen.prep_none' => 'Ninguno',
+    'gen.prep_hint' => 'Un aviso adicional y más temprano, solo en la hora dorada, para que no sean demasiadas notificaciones.',
+    'gen.d1' => 'Lu',
+    'gen.d2' => 'Ma',
+    'gen.d3' => 'Mi',
+    'gen.d4' => 'Ju',
+    'gen.d5' => 'Vi',
+    'gen.d6' => 'Sá',
+    'gen.d7' => 'Do',
+
+    // Rückkanal für falsche Zeiten
+    'report.title' => '¿Los horarios no te cuadran?',
+    'report.text' => 'Un horario equivocado es el único fallo que no puedo encontrar solo, porque no puedo comprobar todos los lugares del mundo. Si ves algo raro, dímelo.',
+    'report.link' => 'Informar de una desviación',
+    'footer.report' => 'Informar de un error',
     'cal.event_description' => "{event} en {name}\nInicio: {start}\nFin: {end}\n{sun}\n\nCreado con lighthours – planificación de luz para foto y vídeo.",
     'cal.sunrise' => "Amanecer: {time}",
     'cal.sunset' => "Puesta de sol: {time}",
@@ -216,9 +244,14 @@ return [
     'screens.intro' => 'Sin aplicación y sin cuenta: los eventos aparecen donde ya miras.',
     'screens.week_alt' => 'Dos días consecutivos en la vista semanal, cada uno con un evento de hora dorada',
     'screens.week_cap' => 'Dos días seguidos en Berlín: 18:52 y luego 18:54. La hora dorada se desplaza uno o dos minutos cada día: nadie retiene eso de memoria.',
-    'screens.event_alt' => 'Un evento abierto con lugar, hora y descripción',
-    'screens.event_cap' => 'Cada evento indica inicio, fin y lugar. El idioma y la descripción proceden de los ajustes que elegiste al crearlo.',
-    'screens.note' => 'Capturas de Apple Calendario. Los mismos eventos aparecen en Google Calendar y Outlook.',
+    'screens.event_alt' => 'Un evento con lugar, horarios y puesta de sol',
+    'screens.event_cap' => 'Cada evento indica inicio, fin, lugar y la puesta de sol como referencia. El idioma y la descripción provienen de los ajustes que elegiste al crearlo.',
+    // Beschriftungen der nachgezeichneten Terminkarte
+    'screens.card_date' => 'Martes, 4 de agosto',
+    'screens.card_above' => 'Sol sobre el horizonte',
+    'screens.card_alarms' => 'Avisos 2 horas y 30 minutos antes',
+    'screens.card_source' => 'Creado con lighthours',
+    'screens.note' => 'Ambas figuras son representaciones dibujadas. Los mismos datos aparecen en Apple Calendar, Google Calendar y Outlook; hay capturas de una app real en el repositorio.',
 
     // Anonyme Zählung
     'stats.line' => 'lighthours mantiene al día <strong>{count} calendarios</strong>.',

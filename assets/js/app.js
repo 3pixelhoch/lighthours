@@ -363,6 +363,10 @@
 
     if ($('rolling').checked) { params.set('rolling', '1'); }
     if ($('reminder').value) { params.set('reminder', $('reminder').value); }
+    if ($('prep').value) { params.set('prep', $('prep').value); }
+
+    var days = selectedWeekdays();
+    if (days && days.length && days.length < 7) { params.set('days', days.join(',')); }
 
     return window.LH.base + '/calendar.php?' + params.toString();
   }
@@ -465,7 +469,29 @@
     update();
   });
 
-  ['end-date', 'rolling', 'cal-lang', 'reminder', 'tz'].forEach(function (id) {
+  /* Gewählte Wochentage als Zahlenliste, 1 = Montag. Leere Auswahl gilt als
+     "alle Tage" - ein Kalender ohne Termine sieht für den Nutzer wie ein
+     Fehler aus, nicht wie eine Einstellung. */
+  function selectedWeekdays() {
+    var wahl = $('weekdays').value;
+    if (wahl === 'all') { return null; }
+    if (wahl !== 'custom') { return wahl.split(','); }
+
+    var an = [].slice.call($('weekday-grid').querySelectorAll('input:checked'))
+      .map(function (el) { return el.value; });
+    return an.length ? an : null;
+  }
+
+  $('weekdays').addEventListener('change', function () {
+    $('weekday-grid').hidden = this.value !== 'custom';
+    update();
+  });
+
+  [].slice.call($('weekday-grid').querySelectorAll('input')).forEach(function (el) {
+    el.addEventListener('change', update);
+  });
+
+  ['end-date', 'rolling', 'cal-lang', 'reminder', 'prep', 'tz'].forEach(function (id) {
     $(id).addEventListener('change', update);
   });
 

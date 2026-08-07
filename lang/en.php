@@ -25,6 +25,34 @@ return [
     'chart.legend_blue' => 'Blue hour, −4° to −6°',
     'chart.text_1' => 'The phases are defined by the position of the sun, not by whether you can see it. Its light does not stop at sunset: it keeps lighting the atmosphere from below, and that light reaches the ground scattered. It is warm, very soft and casts no shadows. That is why the more strongly coloured part still counts as golden hour. Only at −4° does the afterglow lose its strength, the sky itself becomes the light source, and the blue hour begins.',
     'chart.text_2' => 'For planning that means: until sunset the light comes from the side and models – that is the time for people and landscapes. Afterwards a warm sky remains for silhouettes and city shots, but nothing left to light a face with. Every event in the calendar therefore states sunset as well, so you know where you are within that span.',
+
+    // Aufteilung an der Horizontgrenze und zweite Erinnerung
+    'cal.sun_above' => 'Sun above the horizon: {from}–{to}',
+    'cal.alarm_prep' => 'Get ready: {event} starts soon',
+
+    // Wochentagswahl und Vorbereitungszeit im Generator
+    'gen.days_label' => 'Weekdays',
+    'gen.days_all' => 'Every day',
+    'gen.days_week' => 'Monday to Friday',
+    'gen.days_weekend' => 'Weekend',
+    'gen.days_custom' => 'Pick your own',
+    'gen.days_hint' => 'Fewer days mean fewer entries in your calendar. If you only shoot at weekends, you do not need the week.',
+    'gen.prep_label' => 'Preparation time',
+    'gen.prep_none' => 'None',
+    'gen.prep_hint' => 'An additional, earlier reminder – golden hour only, so it does not turn into too many alerts.',
+    'gen.d1' => 'Mon',
+    'gen.d2' => 'Tue',
+    'gen.d3' => 'Wed',
+    'gen.d4' => 'Thu',
+    'gen.d5' => 'Fri',
+    'gen.d6' => 'Sat',
+    'gen.d7' => 'Sun',
+
+    // Rückkanal für falsche Zeiten
+    'report.title' => 'Do the times look wrong to you?',
+    'report.text' => 'Wrong times are the one fault I cannot find on my own – I cannot check every place on earth. If something looks off, please tell me.',
+    'report.link' => 'Report a discrepancy',
+    'footer.report' => 'Report an issue',
     'cal.event_description'=> "{event} in {name}\nStarts: {start}\nEnds: {end}\n{sun}\n\nCreated with lighthours – light planning for photography and film.",
     'cal.sunrise'=> "Sunrise: {time}",
     'cal.sunset'=> "Sunset: {time}",
@@ -211,9 +239,14 @@ return [
     'screens.intro' => 'No app, no account – the events simply appear where you already look.',
     'screens.week_alt' => 'Two consecutive days in week view, each with a golden hour event',
     'screens.week_cap' => 'Two consecutive days in Berlin: 18:52, then 18:54. Golden hour shifts by a minute or two every day – nobody keeps that in their head.',
-    'screens.event_alt' => 'An opened event showing place, time and description',
-    'screens.event_cap' => 'Every event states start, end and place. Language and description come from the settings you chose when creating it.',
-    'screens.note' => 'Screenshots from Apple Calendar. The same events appear in Google Calendar and Outlook.',
+    'screens.event_alt' => 'An event showing place, times and sunset',
+    'screens.event_cap' => 'Every event states start, end, place and sunset as a reference point. Language and description come from the settings you chose when creating it.',
+    // Beschriftungen der nachgezeichneten Terminkarte
+    'screens.card_date' => 'Tuesday, 4 August',
+    'screens.card_above' => 'Sun above the horizon',
+    'screens.card_alarms' => 'Reminders 2 hours and 30 minutes before',
+    'screens.card_source' => 'Created with lighthours',
+    'screens.note' => 'Both figures are drawn representations. The same details appear in Apple Calendar, Google Calendar and Outlook; screenshots from a real app are in the source repository.',
 
     // Anonyme Zählung
     'stats.line' => 'lighthours currently keeps <strong>{count} calendars</strong> up to date.',

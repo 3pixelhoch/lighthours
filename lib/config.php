@@ -10,7 +10,7 @@
 declare(strict_types=1);
 
 /** Fassung der Anwendung. Erscheint in der Kennung des Kalenders. */
-const LH_VERSION = '1.0.0';
+const LH_VERSION = '1.1.0';
 
 /** Kontaktadresse für die Ortssuche (Pflicht laut Nominatim-Nutzungsbedingungen) */
 const LH_USER_AGENT = 'lighthours/' . LH_VERSION . ' (+https://example.org; kontakt@example.org)';

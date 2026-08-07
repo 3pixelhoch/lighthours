@@ -29,6 +29,34 @@ return [
     'chart.legend_blue' => 'Blaue Stunde, −4° bis −6°',
     'chart.text_1' => 'Die Phasen sind über den Sonnenstand festgelegt, nicht darüber, ob die Sonne zu sehen ist. Mit dem Untergang hört ihr Licht nicht auf: Sie beleuchtet die Atmosphäre weiter von unten, und dieses Licht kommt gestreut am Boden an. Es ist warm, sehr weich und wirft keine Schatten mehr. Deshalb zählt der kräftiger gefärbte Bereich noch zur Goldenen Stunde. Erst bei −4° verliert das Nachglühen seine Kraft, der Himmel selbst wird zur Lichtquelle, und die Blaue Stunde beginnt.',
     'chart.text_2' => 'Für die Planung heißt das: Bis zum Untergang kommt das Licht von der Seite und modelliert – das ist die Zeit für Menschen und Landschaft. Danach bleibt ein warmer Himmel für Silhouetten und Stadtaufnahmen, aber nichts mehr, womit sich ein Gesicht ausleuchten ließe. Jeder Termin im Kalender nennt deshalb den Sonnenuntergang mit, damit man weiß, wo man in dieser Spanne steht.',
+
+    // Aufteilung an der Horizontgrenze und zweite Erinnerung
+    'cal.sun_above' => 'Sonne über dem Horizont: {from}–{to} Uhr',
+    'cal.alarm_prep' => 'Vorbereiten: {event} beginnt in Kürze',
+
+    // Wochentagswahl und Vorbereitungszeit im Generator
+    'gen.days_label' => 'Wochentage',
+    'gen.days_all' => 'Alle Tage',
+    'gen.days_week' => 'Montag bis Freitag',
+    'gen.days_weekend' => 'Wochenende',
+    'gen.days_custom' => 'Eigene Auswahl',
+    'gen.days_hint' => 'Weniger Tage bedeuten weniger Termine im Kalender. Wer nur am Wochenende fotografiert, braucht die Woche nicht.',
+    'gen.prep_label' => 'Vorbereitungszeit',
+    'gen.prep_none' => 'Keine',
+    'gen.prep_hint' => 'Eine zusätzliche, frühere Erinnerung – nur zur Goldenen Stunde, damit es nicht zu viele Meldungen werden.',
+    'gen.d1' => 'Mo',
+    'gen.d2' => 'Di',
+    'gen.d3' => 'Mi',
+    'gen.d4' => 'Do',
+    'gen.d5' => 'Fr',
+    'gen.d6' => 'Sa',
+    'gen.d7' => 'So',
+
+    // Rückkanal für falsche Zeiten
+    'report.title' => 'Stimmen die Zeiten bei dir nicht?',
+    'report.text' => 'Falsche Zeiten sind der einzige Fehler, den ich allein nicht finden kann – ich kann nicht an jedem Ort der Welt nachsehen. Wenn dir etwas auffällt, sag Bescheid.',
+    'report.link' => 'Abweichung melden',
+    'footer.report' => 'Fehler melden',
     'cal.event_description'=> "{event} in {name}\nBeginn: {start} Uhr\nEnde: {end} Uhr\n{sun}\n\nErstellt mit lighthours – Lichtplanung für Fotografie und Film.",
     'cal.sunrise'=> "Sonnenaufgang: {time} Uhr",
     'cal.sunset'=> "Sonnenuntergang: {time} Uhr",
@@ -215,9 +243,14 @@ return [
     'screens.intro' => 'Keine App, kein Konto – die Termine stehen einfach da, wo du ohnehin nachschaust.',
     'screens.week_alt' => 'Zwei aufeinanderfolgende Tage in der Wochenansicht, jeder mit einem Termin für die Goldene Stunde',
     'screens.week_cap' => 'Zwei aufeinanderfolgende Tage in Berlin: 18:52, dann 18:54. Die Goldene Stunde wandert täglich um ein bis zwei Minuten – genau das behält niemand im Kopf.',
-    'screens.event_alt' => 'Geöffneter Termin mit Ort, Uhrzeit und Beschreibung',
-    'screens.event_cap' => 'Jeder Termin nennt Beginn, Ende und Ort. Sprache und Beschreibung stammen aus deinen Einstellungen beim Erstellen.',
-    'screens.note' => 'Bildschirmfotos aus Apple Kalender. In Google Kalender und Outlook erscheinen dieselben Termine.',
+    'screens.event_alt' => 'Geöffneter Termin mit Ort, Zeiten und Sonnenuntergang',
+    'screens.event_cap' => 'Jeder Termin nennt Beginn, Ende, Ort und den Sonnenuntergang als Bezugspunkt. Sprache und Beschreibung stammen aus deinen Einstellungen beim Erstellen.',
+    // Beschriftungen der nachgezeichneten Terminkarte
+    'screens.card_date' => 'Dienstag, 4. August',
+    'screens.card_above' => 'Sonne über dem Horizont',
+    'screens.card_alarms' => 'Erinnerungen 2 Stunden und 30 Minuten vorher',
+    'screens.card_source' => 'Erstellt mit lighthours',
+    'screens.note' => 'Beide Abbildungen sind nachgezeichnet. In Apple Kalender, Google Kalender und Outlook stehen dieselben Angaben; Bildschirmfotos aus einer echten App liegen im Quellcode-Repository.',
 
     // Anonyme Zählung
     'stats.line' => 'lighthours hält gerade <strong>{count} Kalender</strong> aktuell.',
