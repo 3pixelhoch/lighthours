@@ -5,6 +5,24 @@ versioning follows [Semantic Versioning](https://semver.org/).
 
 [Deutsche Fassung](CHANGELOG.de.md)
 
+## [1.2.0] – 2026-08-07
+
+### Subscribing
+
+- Dedicated buttons for Google Calendar and Outlook. Until now there was only
+  `webcal://`; on Windows and Android no application is usually registered for
+  that scheme, so clicking it does nothing at all – silently
+- The calendar is also reachable at an address without a query string
+  (`/calendar.php/<token>/lighthours.ics`). Google Calendar needs this: the `&`
+  of a parameter list breaks Google's own URL, and percent-encoding it makes
+  Google reject the value. The previous form keeps working unchanged
+- A note that Google fetches new events about once a day
+
+### Website
+
+- The generator can be pre-filled from the URL: `?lat=…&lon=…&name=…` jumps
+  straight to the selection, so a finished setup can be passed on
+
 ## [1.1.0] – 2026-08-07
 
 ### Calendar
@@ -16,6 +34,10 @@ versioning follows [Semantic Versioning](https://semver.org/).
 - A second, earlier reminder for preparation, deliberately on golden hours
   only, so it does not become eight alerts a day
 - Every event states sunrise or sunset as a reference point
+- Dedicated buttons for Google Calendar and Outlook: webcal:// alone often
+  goes nowhere on Windows and Android, and does so silently
+- The generator can be pre-filled from the URL (`?lat=…&lon=…&name=…`), so a
+  finished setup can be shared
 
 ### Website
 

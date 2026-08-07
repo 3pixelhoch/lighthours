@@ -106,6 +106,47 @@ function read_events(?string $raw): array
 }
 
 /**
+ * Parameter aus dem Pfad übernehmen.
+ *
+ * Google Kalender nimmt Abo-Verweise über
+ * `google.com/calendar/render?cid=webcal://…` entgegen. Enthält der Feed eine
+ * Fragezeichen-Liste, zerlegen deren `&` die Adresse von Google selbst; kodiert
+ * man sie, versteht Google den Wert nicht mehr. Beides endet damit, dass beim
+ * Klick nichts passiert - ohne Meldung.
+ *
+ * Deshalb gibt es eine zweite Schreibweise ohne Fragezeichen:
+ *   /calendar.php/<token>/lighthours.ics
+ * Der Token ist die übliche Parameterliste in base64url.
+ *
+ * Die alte Schreibweise bleibt gültig - bestehende Abos dürfen nicht brechen.
+ * Übernommen werden nur bekannte Schlüssel; alles andere wird verworfen.
+ */
+function read_path_params(): void
+{
+    $pfad = trim((string) ($_SERVER['PATH_INFO'] ?? ''), '/');
+    if ($pfad === '') {
+        return;
+    }
+
+    $token = explode('/', $pfad)[0];
+    $roh   = base64_decode(strtr($token, '-_', '+/'), true);
+    if ($roh === false || $roh === '') {
+        return;
+    }
+
+    parse_str($roh, $werte);
+    $erlaubt = ['lat', 'lon', 'events', 'lang', 'name', 'tz', 'reminder',
+                'prep', 'days', 'months', 'rolling', 'end'];
+
+    foreach ($erlaubt as $schluessel) {
+        if (isset($werte[$schluessel]) && is_string($werte[$schluessel])
+            && !isset($_GET[$schluessel])) {
+            $_GET[$schluessel] = $werte[$schluessel];
+        }
+    }
+}
+
+/**
  * Adresse, unter der sich falsche Zeiten melden lassen.
  *
  * Wird aus der Quellcode-Adresse abgeleitet, damit es keine zweite Einstellung

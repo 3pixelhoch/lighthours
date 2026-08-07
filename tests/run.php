@@ -713,6 +713,71 @@ foreach ($bilder as $pfad => $datei) {
 check('alle verwiesenen Bilddateien existieren', $fehlend === [], implode(', ', $fehlend));
 check('es werden überhaupt Bilder geprüft', count($bilder) >= 5, count($bilder) . ' gefunden');
 
+// Abo-Wege: webcal:// allein lässt Windows- und Android-Nutzer im Regen
+// stehen, ohne dass sie eine Fehlermeldung sehen.
+$js = (string) file_get_contents(__DIR__ . '/../assets/js/app.js');
+// Google Kalender bekommt eine Adresse ohne Fragezeichen: Mit Parameterliste
+// zerlegen deren & Googles eigene Adresse, kodiert versteht Google das cid
+// nicht. Beides scheitert lautlos.
+$vorher = $_GET;
+$_SERVER['PATH_INFO'] = '/' . rtrim(strtr(base64_encode(
+    'lat=52.51739&lon=13.39513&lang=de&name=Zürich&events=golden_morning'), '+/', '-_'), '=')
+    . '/lighthours.ics';
+$_GET = [];
+LightHours\read_path_params();
+check('Parameter aus dem Pfad werden übernommen',
+    ($_GET['lat'] ?? '') === '52.51739' && ($_GET['name'] ?? '') === 'Zürich',
+    json_encode($_GET, JSON_UNESCAPED_UNICODE));
+
+// Ein Angreifer darf über den Pfad nichts einschleusen, was nicht vorgesehen ist
+$_SERVER['PATH_INFO'] = '/' . rtrim(strtr(base64_encode('lat=1&boese=1'), '+/', '-_'), '=');
+$_GET = [];
+LightHours\read_path_params();
+check('unbekannte Schlüssel aus dem Pfad werden verworfen', !isset($_GET['boese']));
+
+// Die Fragezeichen-Form muss weiter gelten, sonst brechen bestehende Abos
+$_SERVER['PATH_INFO'] = '/' . rtrim(strtr(base64_encode('lat=9&lon=9'), '+/', '-_'), '=');
+$_GET = ['lat' => '1', 'lon' => '2'];
+LightHours\read_path_params();
+check('vorhandene Parameter haben Vorrang vor dem Pfad',
+    $_GET['lat'] === '1' && $_GET['lon'] === '2');
+
+$_SERVER['PATH_INFO'] = '/kein-gueltiger-token';
+$_GET = [];
+LightHours\read_path_params();
+check('unbrauchbarer Pfad bricht nichts', $_GET === [] || !isset($_GET['lat']));
+
+unset($_SERVER['PATH_INFO']);
+$_GET = $vorher;
+
+check('Verweis für Google Kalender vorhanden',
+    str_contains($js, 'google.com/calendar/render?cid='));
+check('Google bekommt webcal, nicht https',
+    str_contains($js, "'https://www.google.com/calendar/render?cid=' +"),
+    'mit https:// nimmt Google den Verweis nicht an');
+check('Googles Adresse trägt kein Fragezeichen',
+    str_contains($js, "'/lighthours.ics'") && str_contains($js, 'base64url(frage)'),
+    'sonst zerlegen die & von lighthours die Adresse von Google');
+check('Verweis für Outlook vorhanden',
+    str_contains($js, 'outlook.live.com/calendar/0/addfromweb'));
+check('webcal bleibt für Apple erhalten', str_contains($js, "'webcal://'"));
+
+// Vorbelegung: Grundlage für teilbare Verweise und spätere Stadtseiten
+check('Generator liest Koordinaten aus der Adresse',
+    str_contains($js, 'function applyUrlParams') && str_contains($js, 'applyUrlParams();'));
+check('Vorbelegung prüft die Koordinaten',
+    str_contains($js, 'lat < -90') && str_contains($js, 'lon > 180'),
+    'sonst erzeugt eine falsche Adresse einen unbrauchbaren Kalender');
+
+foreach (I18n::available() as $l) {
+    $t = new I18n($l);
+    $fehlt = array_values(array_filter(
+        ['gen.add_google', 'gen.add_outlook', 'gen.add_google_hint'],
+        static fn(string $k): bool => $t->t($k) === $k || $t->t($k) === ''
+    ));
+    check("Abo-Knöpfe übersetzt: {$l}", $fehlt === [], implode(', ', $fehlt));
+}
+
 check('keine festen Farbwerte im Stylesheet',
     preg_match('/#[0-9A-Fa-f]{6}/', $style) === 0,
     'Farben gehören in tokens.css');

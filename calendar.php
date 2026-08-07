@@ -21,6 +21,10 @@ use LightHours\Ics;
 use LightHours\Stats;
 use LightHours\Timezone;
 
+// Zuerst den Pfad auswerten: Google Kalender kommt mit Fragezeichen-Listen
+// im Abo-Verweis nicht zurecht.
+LightHours\read_path_params();
+
 [$lat, $lon] = LightHours\read_coords();
 
 $events = LightHours\read_events($_GET['events'] ?? null);

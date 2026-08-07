@@ -285,10 +285,15 @@ require __DIR__ . '/partials/kopf.php';
         <h3>Download</h3>
         <div class="actions">
           <a class="btn btn-primary" id="subscribe-btn" href="#"><?= e('gen.subscribe') ?></a>
+          <a class="btn btn-outline" id="google-btn" href="#" rel="noopener"
+             target="_blank"><?= e('gen.add_google') ?></a>
+          <a class="btn btn-outline" id="outlook-btn" href="#" rel="noopener"
+             target="_blank"><?= e('gen.add_outlook') ?></a>
           <a class="btn btn-outline" id="download-btn" href="#" download><?= e('gen.download') ?></a>
         </div>
         <ul class="action-hints">
           <li><strong><?= e('gen.subscribe') ?>:</strong> <?= e('gen.subscribe_hint') ?></li>
+          <li><strong><?= e('gen.add_google') ?>:</strong> <?= e('gen.add_google_hint') ?></li>
           <li><strong><?= e('gen.download') ?>:</strong> <?= e('gen.download_hint') ?></li>
         </ul>
 

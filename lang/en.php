@@ -137,6 +137,9 @@ return [
     'gen.tomorrow'     => 'Tomorrow',
 
     'gen.subscribe'    => 'Subscribe to calendar',
+    'gen.add_google' => 'Google Calendar',
+    'gen.add_outlook' => 'Outlook',
+    'gen.add_google_hint' => 'Opens Google Calendar with a confirmation prompt. Google fetches new events about once a day.',
     'gen.subscribe_hint'=> 'Opens your calendar app. Events stay up to date by themselves.',
     'gen.download'     => 'Download ICS',
     'gen.download_hint'=> 'A one-off file to import – without updates.',

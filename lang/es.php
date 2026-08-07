@@ -140,6 +140,9 @@ return [
     'gen.tomorrow'     => 'Mañana',
 
     'gen.subscribe'    => 'Suscribirse al calendario',
+    'gen.add_google' => 'Google Calendar',
+    'gen.add_outlook' => 'Outlook',
+    'gen.add_google_hint' => 'Abre Google Calendar con una confirmación. Google actualiza los eventos aproximadamente una vez al día.',
     'gen.subscribe_hint' => 'Abre tu aplicación de calendario. Los eventos se mantendrán al día solos.',
     'gen.download'     => 'Descargar ICS',
     'gen.download_hint' => 'Un archivo único para importar, sin actualizaciones.',

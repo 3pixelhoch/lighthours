@@ -141,6 +141,9 @@ return [
     'gen.tomorrow'     => 'Morgen',
 
     'gen.subscribe'    => 'Kalender abonnieren',
+    'gen.add_google' => 'Google Kalender',
+    'gen.add_outlook' => 'Outlook',
+    'gen.add_google_hint' => 'Öffnet Google Kalender mit einer Rückfrage. Google holt neue Termine etwa einmal am Tag.',
     'gen.subscribe_hint'=> 'Öffnet deine Kalender-App. Termine aktualisieren sich danach von allein.',
     'gen.download'     => 'ICS herunterladen',
     'gen.download_hint'=> 'Einmalige Datei zum Importieren – ohne Aktualisierung.',

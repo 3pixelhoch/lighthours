@@ -3,7 +3,7 @@
   <img alt="lighthours – golden hour, in your calendar" src="assets/img/readme-hell.png">
 </picture>
 
-[![Version](https://img.shields.io/badge/version-1.1.0-C97B2C)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-C97B2C)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-3C5A8F)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4)](https://www.php.net/)
 [![No dependencies](https://img.shields.io/badge/dependencies-none-16171B)](#installation)
@@ -164,6 +164,11 @@ GET calendar.php?lat=53.5511&lon=9.9937&months=24&rolling=1
 | `lang` | `de`, `en`, `it`, `fr`, `es`, `pt` | `de` |
 | `reminder` | minutes before start | none |
 | `name` | display name of the place | coordinates |
+
+### Pre-filling the generator
+
+`https://lighthours.app/?lat=53.0595&lon=8.8146&name=Bremen` opens the page with
+the place already selected, so a finished setup can be shared as a link.
 
 Use `rolling=1` for subscriptions — the calendar then moves with the date and
 never runs empty.

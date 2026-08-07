@@ -343,6 +343,16 @@
       .map(function (c) { return c.value; });
   }
 
+  /* base64url: wie base64, aber ohne Zeichen, die in einer Adresse stören.
+     btoa() kann nur Latin-1, deshalb vorher nach UTF-8 wandeln - sonst wirft
+     ein Ortsname wie "Zürich" eine Ausnahme. */
+  function base64url(text) {
+    var bytes = new TextEncoder().encode(text);
+    var roh = '';
+    bytes.forEach(function (b) { roh += String.fromCharCode(b); });
+    return btoa(roh).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
   function buildUrl() {
     var params = new URLSearchParams();
     params.set('lat', state.lat.toFixed(5));
@@ -447,7 +457,29 @@
     var url = buildUrl();
     $('cal-link').value = url;
     $('download-btn').href = url;
-    $('subscribe-btn').href = url.replace(/^https?:\/\//, 'webcal://');
+    /* webcal:// öffnet auf dem Mac und dem iPhone direkt die Kalender-App.
+       Unter Windows und Android ist für das Schema häufig kein Programm
+       registriert - dann passiert beim Klick nichts, und zwar ohne Meldung.
+       Deshalb daneben die beiden großen Anbieter mit eigenem Weg.
+
+       Google verlangt im cid ausdrücklich webcal://; mit https:// nimmt es
+       den Verweis nicht an. */
+    var webcal = url.replace(/^https?:\/\//, 'webcal://');
+    $('subscribe-btn').href = webcal;
+
+    /* Google bekommt eine Adresse ohne Fragezeichen. Mit Parameterliste
+       zerlegen deren & Googles eigene Adresse; kodiert man sie, versteht
+       Google das cid nicht mehr. In beiden Fällen passiert beim Klick nichts,
+       und zwar wortlos. Der Server nimmt die Parameter deshalb auch aus dem
+       Pfad entgegen. */
+    $('google-btn').href =
+      'https://www.google.com/calendar/render?cid=' +
+      webcal.replace(/^webcal:\/\/([^?]+)\?(.*)$/, function (_, pfad, frage) {
+        return 'webcal://' + pfad + '/' + base64url(frage) + '/lighthours.ics';
+      });
+    $('outlook-btn').href =
+      'https://outlook.live.com/calendar/0/addfromweb?url=' + encodeURIComponent(url) +
+      '&name=' + encodeURIComponent(state.name || 'lighthours');
 
     clearTimeout(state.previewTimer);
     state.previewTimer = setTimeout(updatePreview, 250);
@@ -456,6 +488,49 @@
   /* ------------------------------------------------------------------ */
   /* Ereignisse                                                          */
   /* ------------------------------------------------------------------ */
+
+  /* ------------------------------------------------------------------ */
+  /* Vorbelegung aus der Adresse                                         */
+  /* ------------------------------------------------------------------ */
+
+  /* Erlaubt teilbare Einstellungen: lighthours.app/?lat=53.06&lon=8.81&name=Bremen
+     springt direkt in den Generator. Grundlage für Verweise, die Fotografen
+     ihren Kunden schicken, und für spätere Seiten je Stadt.
+
+     Die Zeitzone wird nicht mitgegeben, sondern serverseitig aus den
+     Koordinaten abgeleitet - sonst könnte eine geteilte Adresse einen Kalender
+     mit falscher Zeitzone erzeugen, und das fällt erst Wochen später auf. */
+  function applyUrlParams() {
+    var p = new URLSearchParams(window.location.search);
+    var lat = parseFloat(p.get('lat'));
+    var lon = parseFloat(p.get('lon'));
+
+    if (!isFinite(lat) || !isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      return false;
+    }
+
+    var name = (p.get('name') || '').slice(0, 120);
+
+    fetch(window.LH.base + '/api/times.php?lat=' + lat + '&lon=' + lon + '&days=1')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        selectPlace({
+          lat: lat,
+          lon: lon,
+          short: name || (lat.toFixed(3) + ', ' + lon.toFixed(3)),
+          name: name,
+          timezone: d && d.timezone ? d.timezone : '',
+          timezones: d && d.timezone ? [d.timezone] : []
+        });
+      })
+      .catch(function () {
+        selectPlace({ lat: lat, lon: lon, short: name || 'lighthours', name: name, timezones: [] });
+      });
+
+    return true;
+  }
+
+  applyUrlParams();
 
   $('radius').addEventListener('change', function () {
     $('radius-custom').hidden = $('radius').value !== 'custom';

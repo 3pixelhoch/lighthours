@@ -141,6 +141,9 @@ return [
     'gen.tomorrow'     => 'Demain',
 
     'gen.subscribe'    => 'S\'abonner au calendrier',
+    'gen.add_google' => 'Google Agenda',
+    'gen.add_outlook' => 'Outlook',
+    'gen.add_google_hint' => 'Ouvre Google Agenda avec une demande de confirmation. Google récupère les nouveaux événements environ une fois par jour.',
     'gen.subscribe_hint' => 'Ouvre votre application d\'agenda. Les événements resteront à jour tout seuls.',
     'gen.download'     => 'Télécharger l\'ICS',
     'gen.download_hint' => 'Un fichier unique à importer, sans mise à jour.',

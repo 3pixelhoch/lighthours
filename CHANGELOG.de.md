@@ -5,6 +5,25 @@
 Das Format folgt [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 die Nummerierung [Semantic Versioning](https://semver.org/lang/de/).
 
+## [1.2.0] – 2026-08-07
+
+### Abonnieren
+
+- Eigene Knöpfe für Google Kalender und Outlook. Bisher gab es nur `webcal://`;
+  unter Windows und Android ist für dieses Schema oft kein Programm
+  registriert, und dann passiert beim Klick nichts – ohne jede Meldung
+- Der Kalender ist zusätzlich unter einer Adresse ohne Fragezeichen erreichbar
+  (`/calendar.php/<token>/lighthours.ics`). Google Kalender braucht das: Die
+  `&` einer Parameterliste zerlegen Googles eigene Adresse, kodiert versteht
+  Google den Wert nicht mehr. Die bisherige Schreibweise gilt unverändert weiter
+- Hinweis, dass Google neue Termine etwa einmal am Tag holt
+
+### Website
+
+- Der Generator lässt sich über die Adresse vorbelegen:
+  `?lat=…&lon=…&name=…` springt direkt zur Auswahl. Damit lassen sich fertige
+  Einstellungen weitergeben
+
 ## [1.1.0] – 2026-08-07
 
 ### Kalender
@@ -16,6 +35,10 @@ die Nummerierung [Semantic Versioning](https://semver.org/lang/de/).
 - Zweite, frühere Erinnerung zum Vorbereiten, bewusst nur an den Goldenen
   Stunden, damit nicht acht Meldungen am Tag entstehen
 - Jeder Termin nennt Sonnenauf- beziehungsweise -untergang als Bezugspunkt
+- Eigene Knöpfe für Google Kalender und Outlook: webcal:// allein läuft unter
+  Windows und Android oft ins Leere, ohne dass jemand eine Meldung sieht
+- Der Generator lässt sich über die Adresse vorbelegen
+  (`?lat=…&lon=…&name=…`), womit sich fertige Einstellungen teilen lassen
 
 ### Website
 
